@@ -52,7 +52,7 @@ class BayarPembelian extends BaseController
                 A1.nobukti, 
                 A1.tanggal, 
                 A2.nama subyek, 
-                IF(A1.jenis="Debet", A1.ket, A1.ket2) keterangan,
+                A1.ket2 keterangan,
                 IF(A1.tipe_jurnal="BKK", "KAS", "BANK") jenis_trx, 
                 SUM(A1.jumlah) total 
             FROM 
@@ -62,7 +62,7 @@ class BayarPembelian extends BaseController
                 A1.id_subyek!=0 AND
                 A1.tanggal BETWEEN "'.$from.'" AND "'.$to.'" AND
                 A1.tipe_jurnal IN ('.($tipe=='ALL'?'"BKK","BBK"':'"'.$tipe.'"').') ' .
-                ($query!=''?' AND (A1.nobukti LIKE "%'.$query.'%" OR A2.nama LIKE "%'.$query.'%" OR IF(A1.jenis="Debet", A1.ket, A1.ket2) LIKE "%'.$query.'%") ':'') . '
+                ($query!=''?' AND (A1.nobukti LIKE "%'.$query.'%" OR A2.nama LIKE "%'.$query.'%" OR A1.ket2 LIKE "%'.$query.'%") ':'') . '
             GROUP BY 
                 A1.nobukti
         ) A';
@@ -105,7 +105,7 @@ class BayarPembelian extends BaseController
 			DATE_FORMAT(A.tanggal, "%d-%m-%Y") tanggal,
 			A.kk rekeningheader,
             A.id_subyek subyek, 
-            IF(A.jenis="Debet", ket, ket2) uraian,
+            ket2 uraian,
 
             A.id,
 
@@ -114,7 +114,7 @@ class BayarPembelian extends BaseController
 
             A.kd kode_akun,
             CONCAT(B.kode_akun, \' - \', B.nama_akun) detail_akun,
-            IF(A.jenis="Debet", ket2, ket) keterangan,
+            ket keterangan,
             A.volume qty,
             A.jumlah_a harga,
             A.jumlah

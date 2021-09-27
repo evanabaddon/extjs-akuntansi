@@ -52,7 +52,7 @@ class KasBankMasuk extends BaseController
                 nobukti, 
                 tanggal, 
                 subyek, 
-                IF(jenis="Debet", ket, ket2) keterangan,
+                ket keterangan,
                 IF(tipe_jurnal="BKM", "KAS", "BANK") jenis_trx, 
                 SUM(jumlah) total 
             FROM 
@@ -61,7 +61,7 @@ class KasBankMasuk extends BaseController
                 id_subyek=0 AND
                 tanggal BETWEEN "'.$from.'" AND "'.$to.'" AND
                 tipe_jurnal IN ('.($tipe=='ALL'?'"BKM","BBM"':'"'.$tipe.'"').') ' .
-                ($query!=''?' AND (nobukti LIKE "%'.$query.'%" OR subyek LIKE "%'.$query.'%" OR IF(jenis="Debet", ket, ket2) LIKE "%'.$query.'%") ':'') . '
+                ($query!=''?' AND (nobukti LIKE "%'.$query.'%" OR subyek LIKE "%'.$query.'%" OR ket LIKE "%'.$query.'%") ':'') . '
             GROUP BY 
                 nobukti
         ) A';
@@ -102,19 +102,19 @@ class KasBankMasuk extends BaseController
 			A.trx_id,
 			A.nobukti,
 			DATE_FORMAT(A.tanggal, "%d-%m-%Y") tanggal,
-			A.kk rekeningheader,
+			A.kd rekeningheader,
             A.subyek, 
-            IF(A.jenis="Debet", ket, ket2) uraian,
+            ket uraian,
 
             A.id,
-            A.kd kode_akun,
+            A.kk kode_akun,
             CONCAT(B.kode_akun, \' - \', B.nama_akun) detail_akun,
-            IF(A.jenis="Debet", ket2, ket) keterangan,
+            ket2 keterangan,
             A.volume qty,
             A.jumlah_a harga,
             A.jumlah
 		');
-        $builder->join('rekening B', 'B.kode_akun=A.kd', 'LEFT');
+        $builder->join('rekening B', 'B.kode_akun=A.kk', 'LEFT');
 		$builder->where('A.trx_id', $trx_id);
 		$detail = $builder->get()->getResultArray();
 		if($detail) {

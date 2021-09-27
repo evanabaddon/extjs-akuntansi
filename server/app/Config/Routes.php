@@ -149,6 +149,20 @@ $routes->add('bayarpembelian/insert', 'BayarPembelian::insert');
 $routes->add('bayarpembelian/(:segment)/update', 'BayarPembelian::update/$1');
 $routes->get('bayarpembelian/getnobukti', 'BayarPembelian::getNoBukti');
 
+$routes->get('jurnalumum', 'JurnalUmum::index');
+$routes->get('jurnalumum/(:segment)/load', 'JurnalUmum::load/$1');
+$routes->get('jurnalumum/(:segment)/delete', 'JurnalUmum::delete/$1');
+$routes->add('jurnalumum/insert', 'JurnalUmum::insert');
+$routes->add('jurnalumum/(:segment)/update', 'JurnalUmum::update/$1');
+$routes->get('jurnalumum/getnobukti', 'JurnalUmum::getNoBukti');
+
+$routes->get('jurnalmemorial', 'JurnalMemorial::index');
+$routes->get('jurnalmemorial/(:segment)/load', 'JurnalMemorial::load/$1');
+$routes->get('jurnalmemorial/(:segment)/delete', 'JurnalMemorial::delete/$1');
+$routes->add('jurnalmemorial/insert', 'JurnalMemorial::insert');
+$routes->add('jurnalmemorial/(:segment)/update', 'JurnalMemorial::update/$1');
+$routes->get('jurnalmemorial/getnobukti', 'JurnalMemorial::getNoBukti');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

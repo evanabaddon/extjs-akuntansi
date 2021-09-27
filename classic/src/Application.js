@@ -12,9 +12,6 @@ Ext.define('Admin.Application', {
         'utama',
         'user',
         
-        'jurnalumum',
-        'jurnalmemorial',
-        
         'karyawan',
         'gajiprorate',
         'uttretail',

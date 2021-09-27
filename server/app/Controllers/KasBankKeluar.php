@@ -52,7 +52,7 @@ class KasBankKeluar extends BaseController
                 nobukti, 
                 tanggal, 
                 subyek, 
-                IF(jenis="Debet", ket, ket2) keterangan,
+                ket2 keterangan,
                 IF(tipe_jurnal="BKK", "KAS", "BANK") jenis_trx, 
                 SUM(jumlah) total 
             FROM 
@@ -61,7 +61,7 @@ class KasBankKeluar extends BaseController
                 id_subyek=0 AND
                 tanggal BETWEEN "'.$from.'" AND "'.$to.'" AND
                 tipe_jurnal IN ('.($tipe=='ALL'?'"BKK","BBK"':'"'.$tipe.'"').') ' .
-                ($query!=''?' AND (nobukti LIKE "%'.$query.'%" OR subyek LIKE "%'.$query.'%" OR IF(jenis="Debet", ket, ket2) LIKE "%'.$query.'%") ':'') . '
+                ($query!=''?' AND (nobukti LIKE "%'.$query.'%" OR subyek LIKE "%'.$query.'%" OR ket2 LIKE "%'.$query.'%") ':'') . '
             GROUP BY 
                 nobukti
         ) A';
@@ -104,12 +104,12 @@ class KasBankKeluar extends BaseController
 			DATE_FORMAT(A.tanggal, "%d-%m-%Y") tanggal,
 			A.kk rekeningheader,
             A.subyek, 
-            IF(A.jenis="Debet", ket, ket2) uraian,
+            A.ket2 uraian,
 
             A.id,
             A.kd kode_akun,
             CONCAT(B.kode_akun, \' - \', B.nama_akun) detail_akun,
-            IF(A.jenis="Debet", ket2, ket) keterangan,
+            A.ket keterangan,
             A.volume qty,
             A.jumlah_a harga,
             A.jumlah
