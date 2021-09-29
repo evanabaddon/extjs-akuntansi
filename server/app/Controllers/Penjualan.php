@@ -325,7 +325,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN Keluaran',
+					'keterangan' => 'PPN',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);
@@ -486,7 +486,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN Keluaran',
+					'keterangan' => 'PPN',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);
@@ -741,7 +741,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN Keluaran',
+					'keterangan' => 'PPN',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);
@@ -880,7 +880,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN Keluaran',
+					'keterangan' => 'PPN',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);
