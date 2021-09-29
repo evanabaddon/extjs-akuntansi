@@ -14,7 +14,7 @@ class BeliFakturHead extends Model
     protected $returnType           = 'array';
     protected $useSoftDeletes       = false;
     protected $protectFields        = true;
-    protected $allowedFields        = ['id', 'notrx', 'tanggal', 'id_vendor', 'jenis_trx', 'no_po', 'keterangan', 'subtotal', 'totalpajak', 'voucher', 'total', 'id_jurnal',
+    protected $allowedFields        = ['id', 'notrx', 'tanggal', 'id_vendor', 'pembayaran', 'jenis_trx', 'no_po', 'keterangan', 'subtotal', 'totalpajak', 'uangmuka', 'voucher', 'total', 'id_jurnal',
                                        'user_create', 'date_create', 'user_update', 'date_update'];
 
     // Dates

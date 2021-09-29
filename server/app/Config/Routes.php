@@ -114,6 +114,7 @@ $routes->get('penjualan/(:segment)/load', 'Penjualan::PenjualanLoad/$1');
 $routes->get('penjualan/(:segment)/delete', 'Penjualan::PenjualanDelete/$1');
 $routes->add('penjualan/insert', 'Penjualan::PenjualanInsert');
 $routes->add('penjualan/(:segment)/update', 'Penjualan::PenjualanUpdate/$1');
+$routes->get('penjualan/getnotrx', 'Penjualan::getNoTrx');
 
 $routes->get('penjualan/voucher', 'Penjualan::PenjualanVoucherList');
 $routes->get('penjualan/voucher/(:segment)/load', 'Penjualan::PenjualanVoucherLoad/$1');

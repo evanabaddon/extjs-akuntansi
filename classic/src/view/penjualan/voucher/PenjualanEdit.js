@@ -105,11 +105,60 @@ Ext.define('Admin.view.penjualan.voucher.PenjualanEdit', {
                     specialkey: function(field, e) {
                         if (e.getKey() == e.ENTER) {
                             var me = this.up('penjualan-voucher-edit');
-                            me.down('#no_so').focus(true, 10);
+                            me.down('#jenistrx').focus(true, 10);
                         }
                     }
                 }       
-            },
+            }, 
+            {
+                xtype: 'combobox',
+                name: 'jenistrx',
+                itemId: 'jenistrx',
+                fieldLabel: 'Jenis Transaksi',
+                store: Ext.create('Ext.data.Store', {
+                    fields: [
+                        {
+                            type: 'int',
+                            name: 'id'
+                        },
+                        {
+                            type: 'string',
+                            name: 'kode'
+                        },
+                        {
+                            type: 'string',
+                            name: 'nama'
+                        }
+                    ],
+                    data: [
+                        {id: 1, kode: 'C', nama: 'Cash'},
+                        {id: 2, kode: 'K', nama: 'Kredit'}
+                    ]
+                }),
+                valueField: 'nama',
+                displayField: 'nama',
+                typeAhead: true,
+                queryMode: 'local',
+                value: 'Kredit',
+                listeners: {
+                    select: function(field, record) {
+                        var me = this.up('penjualan-voucher-edit');
+                        var uangmuka = me.down('#uangmuka');                                        
+                        
+                        uangmuka.setDisabled(record.data['nama']=='Cash');
+                        if(record.data['nama']=='Cash') {
+                            uangmuka.setValue(0);
+                        }
+
+                    },
+                    specialkey: function(field, e){
+                        if (e.getKey() == e.ENTER) {
+                            var me = this.up('penjualan-voucher-edit');
+                            me.down('#keterangan').focus(true, 10);
+                        }
+                    }
+                }
+            }/*,
             {
                 xtype: 'textfield',
                 name: 'no_so',
@@ -125,7 +174,7 @@ Ext.define('Admin.view.penjualan.voucher.PenjualanEdit', {
                         }
                     }
                 }
-            }],
+            }*/],
             flex: 0.55,
             margin: '0 10 0 0'
         },
@@ -211,11 +260,30 @@ Ext.define('Admin.view.penjualan.voucher.PenjualanEdit', {
                 name: 'subtotal',
                 itemId:'subtotal',
                 fieldLabel: 'Sub Total'
-            }, {
+            }, 
+            {
                 name: 'totalpajak',
                 itemId:'totalpajak',
                 fieldLabel: 'Pajak'
-            }, {
+            },
+            {
+                name: 'uangmuka',
+                itemId:'uangmuka',
+                fieldLabel: 'Uang Muka',
+                readOnly: false,
+                fieldStyle: 'font-weight: bold; text-align: right; background: none #fff;',
+                listeners: {
+                    change: function(field) {
+                        var me = this.up('penjualan-voucher-edit');
+                        var subtotal = eval(me.down('#subtotal').getSubmitValue());
+                        var totalpajak = eval(me.down('#totalpajak').getSubmitValue());
+                        var uangmuka = eval(this.getSubmitValue());
+
+                        me.down('#total').setValue(subtotal+totalpajak-uangmuka);
+                    }
+                }
+            },
+            {
                 name: 'total',
                 itemId:'total',
                 fieldLabel: 'Total'
@@ -242,5 +310,19 @@ Ext.define('Admin.view.penjualan.voucher.PenjualanEdit', {
                 handler: 'onSaveButtonClick'
             }
         ]
+    },
+
+    setNoTrx: function(kode) {
+        var me = this;
+
+        Ext.Ajax.request({
+            method:'GET',
+            url: './server/public/penjualan/getnotrx',
+            success: function(response) {
+                var json = Ext.JSON.decode(response.responseText);
+                me.down('[name=notrx]').setValue(json.notrx);
+                me.down('[name=notrx]').focus(true, 10);
+            }
+        });
     }
 });

@@ -155,6 +155,12 @@ Ext.define('Admin.view.penjualan.voucher.PenjualanController', {
                     var grid = form.down('penjualan-voucher-edit-detail');
                     var store = grid.getStore();                    
                     store.loadData(json['detail']);
+
+                    var uangmuka = form.down('#uangmuka');
+                    uangmuka.setDisabled(json.data['jenistrx']=='Cash');
+                    if(json.data['jenistrx']=='Cash') {
+                        uangmuka.setValue(0);
+                    }
                 },
                 failure: function (frm, action) {
                     var json = Ext.JSON.decode(action.response.responseText);
@@ -171,6 +177,8 @@ Ext.define('Admin.view.penjualan.voucher.PenjualanController', {
                     });
                 }
             });
+        } else {
+            form.setNoTrx();
         }
     },
 

@@ -32,7 +32,11 @@ Ext.define('Admin.model.penjualan.Penjualan', {
         },
         {
             type: 'string',
-            name: 'jenis_trx'
+            name: 'jenis_trx' //barang jasa or voucher
+        },
+        {
+            type: 'string',
+            name: 'jenistrx'   //cash or kredit
         },
         {
             type: 'int',
@@ -41,6 +45,10 @@ Ext.define('Admin.model.penjualan.Penjualan', {
         {
             type: 'int',
             name: 'totalpajak'
+        },
+        {
+            type: 'int',
+            name: 'uangmuka'
         },
         {
             type: 'int',

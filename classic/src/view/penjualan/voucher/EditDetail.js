@@ -429,14 +429,15 @@ Ext.define('Admin.view.penjualan.voucher.EditDetail', {
             subtotal+=rec.data['jumlah'];
             totalpajak+=(rec.data['pajak'].toUpperCase()=='PPN'?(0.1*rec.data['jumlah']):0);
         }
-
+        
         var e_subtotal = me.up('penjualan-voucher-edit').down('#subtotal');
         var e_totalpajak = me.up('penjualan-voucher-edit').down('#totalpajak');
+        var e_uangmuka = me.up('penjualan-voucher-edit').down('#uangmuka');
         var e_total = me.up('penjualan-voucher-edit').down('#total');
-               
+
         e_subtotal.setValue(subtotal);
         e_totalpajak.setValue(totalpajak);
-        e_total.setValue(subtotal+totalpajak);
+        e_total.setValue(subtotal+totalpajak-eval(e_uangmuka.getSubmitValue()));
     },
     
     getDetail: function() {

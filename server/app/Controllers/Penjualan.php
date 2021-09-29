@@ -8,6 +8,26 @@ class Penjualan extends BaseController
 {
 	use ResponseTrait;
 
+	public function getNoTrx()
+    {
+        $model = new \App\Models\JualFakturHead();
+
+        $table = "(SELECT MAX(RIGHT(notrx, 5))+1 last_id FROM jual_faktur_head A WHERE LEFT(notrx, 3)='JL-') A";
+        $data = $model->db->table($table)->get()->getRowArray();
+
+        $last = $data['last_id']<=0?1:$data['last_id'];
+        $nobukti = $last;
+        for ($i = 0; $i < 5 - strlen($last); $i++) {
+            $nobukti = "0" . $nobukti;
+        }
+    
+        $response = [
+            'notrx' => "JL-".$nobukti
+        ];
+            
+		return $this->respond($response, 200);
+    }
+
 	public function PenjualanListAll() {
 		$model = new \App\Models\JualFakturHead();
 
@@ -19,7 +39,7 @@ class Penjualan extends BaseController
 			A.notrx,
 			DATE_FORMAT(A.tanggal, "%d-%m-%Y") tanggal,
 			B.nama customer,
-			A.pembayaran,
+			A.pembayaran jenistrx,
 			A.jenis_trx,
 			A.total,
 			A.keterangan,
@@ -28,7 +48,7 @@ class Penjualan extends BaseController
         ');
 		$builder->join('customer B', 'B.id=A.id_customer', 'LEFT');
 		$builder->join('rekening C', 'C.kode_akun=B.akun_piutang', 'LEFT');
-		$builder->where(['id_customer' => $id_customer]);
+		$builder->where(['A.pembayaran' => 'Kredit', 'A.id_customer' => $id_customer]);
 		$builder->orderBy('A.tanggal', 'DESC');
 		$builder->limit($limit, $start);
 		//$data = $builder->getCompiledSelect();
@@ -60,7 +80,7 @@ class Penjualan extends BaseController
 			A.notrx,
 			DATE_FORMAT(A.tanggal, "%d-%m-%Y") tanggal,
 			B.nama customer,
-			A.pembayaran,
+			A.pembayaran jenistrx,
 			A.jenis_trx,
 			A.total,
 			A.keterangan
@@ -91,18 +111,19 @@ class Penjualan extends BaseController
 
 	public function PenjualanLoad($id) {
 		$model = new \App\Models\JualFakturHead();
-
+		
 		$builder = $model->select('
 			id,
 			notrx,
 			DATE_FORMAT(tanggal, "%d-%m-%Y") tanggal,
 			id_customer,
-			pembayaran,
+			pembayaran jenistrx,
 			jenis_trx,
 			no_so,
 			keterangan,
 			subtotal,
 			totalpajak,
+			uangmuka,
 			total
 		');
 		$builder->where('id', $id);
@@ -113,7 +134,7 @@ class Penjualan extends BaseController
 			$builder = $mdl_detail->where(['jenis_barang' => 1, 'id_head' => $data['id']])->orderBy('id ASC');
 			$detail = $builder->get()->getResultArray();
 
-			$builder = $mdl_jasa->where(['jenis_barang' => 2, 'id_head' => $data['id']])->orderBy('id ASC');
+			$builder = $mdl_detail->where(['jenis_barang' => 2, 'id_head' => $data['id']])->orderBy('id ASC');
 			$jasa = $builder->get()->getResultArray();
 
 			$response = [
@@ -145,9 +166,17 @@ class Penjualan extends BaseController
 		
 		$delete = $model->whereIn('id', explode(',', $id))->delete();
 		if($delete) {
+			//HAPUS DETAIL
 			$mdl_detail = new \App\Models\JualFakturDetail();
 			$mdl_detail->whereIn('id_head', explode(',', $id))->delete();
-		
+
+			//HAPUS JURNAL
+			$jurnal = new \App\Models\Jurnal();
+			$detail = new \App\Models\JurnalDetail();
+
+			$jurnal->whereIn('id', $id_jurnal)->delete();
+			$detail->whereIn('id_jurnal', $id_jurnal)->delete();
+
 			$response = [
 				'success' => true,
 				'message' => 'Hapus Penjualan berhasil.'
@@ -171,12 +200,13 @@ class Penjualan extends BaseController
 			'notrx'          => $this->request->getPost('notrx'),
 			'tanggal'        => $this->request->getPost('tanggal'),
 			'id_customer'    => $this->request->getPost('id_customer'),
-			'pembayaran'     => 'KREDIT',
+			'pembayaran'     => $this->request->getPost('jenistrx'),
 			'jenis_trx'      => 1,
 			'no_so'		     => $this->request->getPost('no_so'),
 			'keterangan'     => $this->request->getPost('keterangan'),
 			'subtotal'       => $this->request->getPost('subtotal'),
 			'totalpajak'     => $this->request->getPost('totalpajak'),
+			'uangmuka'       => $this->request->getPost('uangmuka'),
 			'voucher'        => 0,
 			'total'          => $this->request->getPost('total'),
 			'date_create'    => $date->format('Y-m-d H:i:s'),
@@ -199,46 +229,117 @@ class Penjualan extends BaseController
 		$insert = $model->insert($_DATA);
 		if($insert) {
 			$mdl_detail = new \App\Models\JualFakturDetail();
+
 			$detail = $this->request->getPost('detail');
-			$rows = explode(';', $detail);
-			foreach($rows as $value) {
-				$cols = explode(',', $value);
-				$_DATA = [
-					'id_head'      => $insert,
-					'id_barang'    => $cols[0], 
-					'nama_barang'  => $cols[1], 
-					'jenis_barang' => 1,
-					'qty'          => $cols[2], 
-					'satuan'       => $cols[3],
-					'harga'        => $cols[4],
-					'diskon'       => $cols[5], 
-					'pajak'        => $cols[6],
-					'jumlah'       => $cols[7]
-				];
+			if($detail!='') {
+				$rows = explode(';', $detail);
+				foreach($rows as $value) {
+					$cols = explode(',', $value);
+					$_DATA = [
+						'id_head'      => $insert,
+						'id_barang'    => $cols[0], 
+						'nama_barang'  => $cols[1], 
+						'jenis_barang' => 1,
+						'qty'          => $cols[2], 
+						'satuan'       => $cols[3],
+						'harga'        => $cols[4],
+						'diskon'       => $cols[5], 
+						'pajak'        => $cols[6],
+						'jumlah'       => $cols[7]
+					];
 
-				$mdl_detail->insert($_DATA);
+					$mdl_detail->insert($_DATA);
+				}
 			}
-
+			
 			$jasa = $this->request->getPost('jasa');
-			$rows = explode(';', $jasa);
-			foreach($rows as $value) {
-				$cols = explode(',', $value);
-				$_DATA = [
-					'id_head'      => $insert,
-					'id_barang'    => $cols[0], 
-					'nama_barang'  => $cols[1], 
-					'jenis_barang' => 1,
-					'qty'          => $cols[2], 
-					'satuan'       => $cols[3],
-					'harga'        => $cols[4],
-					'diskon'       => $cols[5], 
-					'pajak'        => $cols[6],
-					'jumlah'       => $cols[7]
-				];
+			if($jasa!='') {
+				$rows = explode(';', $jasa);
+				foreach($rows as $value) {
+					$cols = explode(',', $value);
+					$_DATA = [
+						'id_head'      => $insert,
+						'id_barang'    => $cols[0], 
+						'nama_barang'  => $cols[1], 
+						'jenis_barang' => 1,
+						'qty'          => $cols[2], 
+						'satuan'       => $cols[3],
+						'harga'        => $cols[4],
+						'diskon'       => $cols[5], 
+						'pajak'        => $cols[6],
+						'jumlah'       => $cols[7]
+					];
 
-				$mdl_detail->insert($_DATA);
+					$mdl_detail->insert($_DATA);
+				}
 			}
 
+			//AUTO JURNAL PENJUALAN
+			$jurnal = new \App\Models\Jurnal();
+			$detail = new \App\Models\JurnalDetail();
+
+			//insert jurnal head
+			$id_jurnal = $jurnal->insert([
+				'nobukti'     => $this->request->getPost('notrx'),
+				'tanggal'     => $this->request->getPost('tanggal'),
+				'keterangan'  => $this->request->getPost('keterangan'),
+				'tipe_jurnal' => 'PJL',
+				'total'       => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak'),
+				'date_create' => $date->format('Y-m-d H:i:s'),
+				'user_create' => 0,
+				'date_update' => $date->format('Y-m-d H:i:s'),
+				'user_update' => 0
+			]);
+
+			//1: PIUTANG
+			$detail->insert([
+                'id_jurnal'  => $id_jurnal,
+                'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
+                'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+                'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
+                'kredit'     => 0
+            ]);
+
+			//2: UANG MUKA
+			if($this->request->getPost('uangmuka')>0) {	
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '110101001',
+					'keterangan' => 'Kas',
+					'debet'      => $this->request->getPost('uangmuka'),
+					'kredit'     => 0
+				]);
+
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '2104',
+					'keterangan' => 'Uang Muka',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('uangmuka')
+				]);
+			}
+
+			//3: PENJUALAN
+			$detail->insert([
+                'id_jurnal'  => $id_jurnal,
+                'kode_akun'  => '4140',
+                'keterangan' => 'Penjualan',
+                'debet'      => 0,
+                'kredit'     => $this->request->getPost('subtotal')
+            ]);
+
+			//4: PPN
+			if($this->request->getPost('totalpajak')>0) {
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '210104',
+					'keterangan' => 'PPN Keluaran',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('totalpajak')
+				]);
+			}
+			$model->where('id', $insert)->set(['id_jurnal' => $id_jurnal])->update();
+			
 			$response = [
 				'success' => true,
 				'message' => 'Tambah Penjualan berhasil.'
@@ -262,12 +363,13 @@ class Penjualan extends BaseController
 			'notrx'          => $this->request->getPost('notrx'),
 			'tanggal'        => $this->request->getPost('tanggal'),
 			'id_customer'    => $this->request->getPost('id_customer'),
-			'pembayaran'     => 'KREDIT',
+			'pembayaran'     => $this->request->getPost('jenistrx'),
 			'jenis_trx'      => 1,
 			'no_so'		     => $this->request->getPost('no_so'),
 			'keterangan'     => $this->request->getPost('keterangan'),
 			'subtotal'       => $this->request->getPost('subtotal'),
 			'totalpajak'     => $this->request->getPost('totalpajak'),
+			'uangmuka'       => $this->request->getPost('uangmuka'),
 			'voucher'        => 0,
 			'total'          => $this->request->getPost('total'),
 			'date_update'    => $date->format('Y-m-d H:i:s')
@@ -289,45 +391,123 @@ class Penjualan extends BaseController
 		if($update) {
 			$mdl_detail = new \App\Models\JualFakturDetail();
 			$mdl_detail->where('id_head', $id)->delete();
+
 			$detail = $this->request->getPost('detail');
-			$rows = explode(';', $detail);
-			foreach($rows as $value) {
-				$cols = explode(',', $value);
-				$_DATA = [
-					'id_head'      => $id,
-					'id_barang'    => $cols[0], 
-					'nama_barang'  => $cols[1], 
-					'jenis_barang' => 1,
-					'qty'          => $cols[2], 
-					'satuan'       => $cols[3],
-					'harga'        => $cols[4],
-					'diskon'       => $cols[5], 
-					'pajak'        => $cols[6],
-					'jumlah'       => $cols[7]
-				];
+			if($detail!='') {
+				$rows = explode(';', $detail);
+				foreach($rows as $value) {
+					$cols = explode(',', $value);
+					$_DATA = [
+						'id_head'      => $id,
+						'id_barang'    => $cols[0], 
+						'nama_barang'  => $cols[1], 
+						'jenis_barang' => 1,
+						'qty'          => $cols[2], 
+						'satuan'       => $cols[3],
+						'harga'        => $cols[4],
+						'diskon'       => $cols[5], 
+						'pajak'        => $cols[6],
+						'jumlah'       => $cols[7]
+					];
 
-				$mdl_detail->insert($_DATA);
+					$mdl_detail->insert($_DATA);
+				}
 			}
-
+			
 			$jasa = $this->request->getPost('jasa');
-			$rows = explode(';', $jasa);
-			foreach($rows as $value) {
-				$cols = explode(',', $value);
-				$_DATA = [
-					'id_head'      => $id,
-					'id_barang'    => $cols[0], 
-					'nama_barang'  => $cols[1], 
-					'jenis_barang' => 2,
-					'qty'          => $cols[2], 
-					'satuan'       => $cols[3],
-					'harga'        => $cols[4],
-					'diskon'       => $cols[5], 
-					'pajak'        => $cols[6],
-					'jumlah'       => $cols[7]
-				];
+			if($jasa!='') {
+				$rows = explode(';', $jasa);
+				foreach($rows as $value) {
+					$cols = explode(',', $value);
+					$_DATA = [
+						'id_head'      => $id,
+						'id_barang'    => $cols[0], 
+						'nama_barang'  => $cols[1], 
+						'jenis_barang' => 2,
+						'qty'          => $cols[2], 
+						'satuan'       => $cols[3],
+						'harga'        => $cols[4],
+						'diskon'       => $cols[5], 
+						'pajak'        => $cols[6],
+						'jumlah'       => $cols[7]
+					];
 
-				$mdl_detail->insert($_DATA);
+					$mdl_detail->insert($_DATA);
+				}
 			}
+
+			//GET ID JURNAL PENJUALAN			
+			$data = $model->select('id_jurnal')->where('id', $id)->get()->getRowArray();
+
+			//AUTO JURNAL PENJUALAN
+			$jurnal = new \App\Models\Jurnal();
+			$detail = new \App\Models\JurnalDetail();
+
+			//HAPUS JURNAL
+			$jurnal->where('id', $data['id_jurnal'])->delete();
+			$detail->where('id_jurnal', $data['id_jurnal'])->delete();
+
+			//insert jurnal head
+			$id_jurnal = $jurnal->insert([
+				'nobukti'     => $this->request->getPost('notrx'),
+				'tanggal'     => $this->request->getPost('tanggal'),
+				'keterangan'  => $this->request->getPost('keterangan'),
+				'tipe_jurnal' => 'PJL',
+				'total'       => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak'),
+				'date_create' => $date->format('Y-m-d H:i:s'),
+				'user_create' => 0,
+				'date_update' => $date->format('Y-m-d H:i:s'),
+				'user_update' => 0
+			]);
+
+			//1: PIUTANG
+			$detail->insert([
+				'id_jurnal'  => $id_jurnal,
+				'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
+				'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+				'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
+				'kredit'     => 0
+			]);
+
+			//2: UANG MUKA
+			if($this->request->getPost('uangmuka')>0) {	
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '110101001',
+					'keterangan' => 'Kas',
+					'debet'      => $this->request->getPost('uangmuka'),
+					'kredit'     => 0
+				]);
+
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '2104',
+					'keterangan' => 'Uang Muka',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('uangmuka')
+				]);
+			}
+
+			//3: PENJUALAN
+			$detail->insert([
+				'id_jurnal'  => $id_jurnal,
+				'kode_akun'  => '4140',
+				'keterangan' => 'Penjualan',
+				'debet'      => 0,
+				'kredit'     => $this->request->getPost('subtotal')
+			]);
+
+			//4: PPN
+			if($this->request->getPost('totalpajak')>0) {
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '210104',
+					'keterangan' => 'PPN Keluaran',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('totalpajak')
+				]);
+			}
+			$model->where('id', $id)->set(['id_jurnal' => $id_jurnal])->update();
 
 			$response = [
 				'success' => true,
@@ -361,7 +541,7 @@ class Penjualan extends BaseController
 			A.notrx,
 			DATE_FORMAT(A.tanggal, "%d-%m-%Y") tanggal,
 			B.nama customer,
-			A.pembayaran,
+			A.pembayaran jenistrx,
 			A.jenis_trx,
 			A.total,
 			A.keterangan
@@ -398,12 +578,13 @@ class Penjualan extends BaseController
 			notrx,
 			DATE_FORMAT(tanggal, "%d-%m-%Y") tanggal,
 			id_customer,
-			pembayaran,
+			pembayaran jenistrx,
 			jenis_trx,
 			no_so,
 			keterangan,
 			subtotal,
 			totalpajak,
+			uangmuka,
 			total
 		');
 		$builder->where('id', $id);
@@ -443,6 +624,13 @@ class Penjualan extends BaseController
 			$mdl_detail = new \App\Models\JualFakturDetail();
 			$mdl_detail->whereIn('id_head', explode(',', $id))->delete();
 		
+			//HAPUS JURNAL
+			$jurnal = new \App\Models\Jurnal();
+			$detail = new \App\Models\JurnalDetail();
+
+			$jurnal->whereIn('id', $id_jurnal)->delete();
+			$detail->whereIn('id_jurnal', $id_jurnal)->delete();
+
 			$response = [
 				'success' => true,
 				'message' => 'Hapus Penjualan Voucher berhasil.'
@@ -466,12 +654,13 @@ class Penjualan extends BaseController
 			'notrx'          => $this->request->getPost('notrx'),
 			'tanggal'        => $this->request->getPost('tanggal'),
 			'id_customer'    => $this->request->getPost('id_customer'),
-			'pembayaran'     => 'KREDIT',
+			'pembayaran'     => $this->request->getPost('jenistrx'),
 			'jenis_trx'      => 2,
 			'no_so'		     => $this->request->getPost('no_so'),
 			'keterangan'     => $this->request->getPost('keterangan'),
 			'subtotal'       => $this->request->getPost('subtotal'),
 			'totalpajak'     => $this->request->getPost('totalpajak'),
+			'uangmuka'       => $this->request->getPost('uangmuka'),
 			'voucher'        => 0,
 			'total'          => $this->request->getPost('total'),
 			'date_create'    => $date->format('Y-m-d H:i:s'),
@@ -494,25 +683,94 @@ class Penjualan extends BaseController
 		$insert = $model->insert($_DATA);
 		if($insert) {
 			$mdl_detail = new \App\Models\JualFakturDetail();
-			$detail = $this->request->getPost('detail');
-			$rows = explode(';', $detail);
-			foreach($rows as $value) {
-				$cols = explode(',', $value);
-				$_DATA = [
-					'id_head'      => $insert,
-					'id_barang'    => $cols[0], 
-					'nama_barang'  => $cols[1], 
-					'jenis_barang' => 3,
-					'qty'          => $cols[2], 
-					'satuan'       => $cols[3],
-					'harga'        => $cols[4],
-					'diskon'       => $cols[5], 
-					'pajak'        => $cols[6],
-					'jumlah'       => $cols[7]
-				];
 
-				$mdl_detail->insert($_DATA);
+			$detail = $this->request->getPost('detail');
+			if($detail!='') {
+				$rows = explode(';', $detail);
+				foreach($rows as $value) {
+					$cols = explode(',', $value);
+					$_DATA = [
+						'id_head'      => $insert,
+						'id_barang'    => $cols[0], 
+						'nama_barang'  => $cols[1], 
+						'jenis_barang' => 3,
+						'qty'          => $cols[2], 
+						'satuan'       => $cols[3],
+						'harga'        => $cols[4],
+						'diskon'       => $cols[5], 
+						'pajak'        => $cols[6],
+						'jumlah'       => $cols[7]
+					];
+
+					$mdl_detail->insert($_DATA);
+				}
 			}
+
+			//AUTO JURNAL PENJUALAN
+			$jurnal = new \App\Models\Jurnal();
+			$detail = new \App\Models\JurnalDetail();
+
+			//insert jurnal head
+			$id_jurnal = $jurnal->insert([
+				'nobukti'     => $this->request->getPost('notrx'),
+				'tanggal'     => $this->request->getPost('tanggal'),
+				'keterangan'  => $this->request->getPost('keterangan'),
+				'tipe_jurnal' => 'PJL',
+				'total'       => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak'),
+				'date_create' => $date->format('Y-m-d H:i:s'),
+				'user_create' => 0,
+				'date_update' => $date->format('Y-m-d H:i:s'),
+				'user_update' => 0
+			]);
+
+			//1: PIUTANG
+			$detail->insert([
+                'id_jurnal'  => $id_jurnal,
+                'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
+                'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+                'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
+                'kredit'     => 0
+            ]);
+
+			//2: UANG MUKA
+			if($this->request->getPost('uangmuka')>0) {	
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '110101001',
+					'keterangan' => 'Kas',
+					'debet'      => $this->request->getPost('uangmuka'),
+					'kredit'     => 0
+				]);
+
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '2104',
+					'keterangan' => 'Uang Muka',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('uangmuka')
+				]);
+			}
+
+			//3: PENJUALAN
+			$detail->insert([
+                'id_jurnal'  => $id_jurnal,
+                'kode_akun'  => '4140',
+                'keterangan' => 'Penjualan',
+                'debet'      => 0,
+                'kredit'     => $this->request->getPost('subtotal')
+            ]);
+
+			//4: PPN
+			if($this->request->getPost('totalpajak')>0) {
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '210104',
+					'keterangan' => 'PPN Keluaran',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('totalpajak')
+				]);
+			}
+			$model->where('id', $insert)->set(['id_jurnal' => $id_jurnal])->update();
 
 			$response = [
 				'success' => true,
@@ -537,12 +795,13 @@ class Penjualan extends BaseController
 			'notrx'          => $this->request->getPost('notrx'),
 			'tanggal'        => $this->request->getPost('tanggal'),
 			'id_customer'    => $this->request->getPost('id_customer'),
-			'pembayaran'     => 'KREDIT',
+			'pembayaran'     => $this->request->getPost('jenistrx'),
 			'jenis_trx'      => 2,
 			'no_so'		     => $this->request->getPost('no_so'),
 			'keterangan'     => $this->request->getPost('keterangan'),
 			'subtotal'       => $this->request->getPost('subtotal'),
 			'totalpajak'     => $this->request->getPost('totalpajak'),
+			'uangmuka'       => $this->request->getPost('uangmuka'),
 			'voucher'        => 0,
 			'total'          => $this->request->getPost('total'),
 			'date_update'    => $date->format('Y-m-d H:i:s')
@@ -564,25 +823,101 @@ class Penjualan extends BaseController
 		if($update) {
 			$mdl_detail = new \App\Models\JualFakturDetail();
 			$mdl_detail->where('id_head', $id)->delete();
-			$detail = $this->request->getPost('detail');
-			$rows = explode(';', $detail);
-			foreach($rows as $value) {
-				$cols = explode(',', $value);
-				$_DATA = [
-					'id_head'      => $id,
-					'id_barang'    => $cols[0], 
-					'nama_barang'  => $cols[1], 
-					'jenis_barang' => 3,
-					'qty'          => $cols[2], 
-					'satuan'       => $cols[3],
-					'harga'        => $cols[4],
-					'diskon'       => $cols[5], 
-					'pajak'        => $cols[6],
-					'jumlah'       => $cols[7]
-				];
 
-				$mdl_detail->insert($_DATA);
+			$detail = $this->request->getPost('detail');
+			if($detail!='') {
+				$rows = explode(';', $detail);
+				foreach($rows as $value) {
+					$cols = explode(',', $value);
+					$_DATA = [
+						'id_head'      => $id,
+						'id_barang'    => $cols[0], 
+						'nama_barang'  => $cols[1], 
+						'jenis_barang' => 3,
+						'qty'          => $cols[2], 
+						'satuan'       => $cols[3],
+						'harga'        => $cols[4],
+						'diskon'       => $cols[5], 
+						'pajak'        => $cols[6],
+						'jumlah'       => $cols[7]
+					];
+
+					$mdl_detail->insert($_DATA);
+				}
 			}
+
+			//GET ID JURNAL PENJUALAN			
+			$data = $model->select('id_jurnal')->where('id', $id)->get()->getRowArray();
+
+			//AUTO JURNAL PENJUALAN
+			$jurnal = new \App\Models\Jurnal();
+			$detail = new \App\Models\JurnalDetail();
+
+			//HAPUS JURNAL
+			$jurnal->where('id', $data['id_jurnal'])->delete();
+			$detail->where('id_jurnal', $data['id_jurnal'])->delete();
+
+			//insert jurnal head
+			$id_jurnal = $jurnal->insert([
+				'nobukti'     => $this->request->getPost('notrx'),
+				'tanggal'     => $this->request->getPost('tanggal'),
+				'keterangan'  => $this->request->getPost('keterangan'),
+				'tipe_jurnal' => 'PJL',
+				'total'       => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak'),
+				'date_create' => $date->format('Y-m-d H:i:s'),
+				'user_create' => 0,
+				'date_update' => $date->format('Y-m-d H:i:s'),
+				'user_update' => 0
+			]);
+
+			//1: PIUTANG
+			$detail->insert([
+				'id_jurnal'  => $id_jurnal,
+				'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
+				'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+				'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
+				'kredit'     => 0
+			]);
+
+			//2: UANG MUKA
+			if($this->request->getPost('uangmuka')>0) {	
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '110101001',
+					'keterangan' => 'Kas',
+					'debet'      => $this->request->getPost('uangmuka'),
+					'kredit'     => 0
+				]);
+
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '2104',
+					'keterangan' => 'Uang Muka',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('uangmuka')
+				]);
+			}
+
+			//3: PENJUALAN
+			$detail->insert([
+				'id_jurnal'  => $id_jurnal,
+				'kode_akun'  => '4140',
+				'keterangan' => 'Penjualan',
+				'debet'      => 0,
+				'kredit'     => $this->request->getPost('subtotal')
+			]);
+
+			//4: PPN
+			if($this->request->getPost('totalpajak')>0) {
+				$detail->insert([
+					'id_jurnal'  => $id_jurnal,
+					'kode_akun'  => '210104',
+					'keterangan' => 'PPN Keluaran',
+					'debet'      => 0,
+					'kredit'     => $this->request->getPost('totalpajak')
+				]);
+			}
+			$model->where('id', $id)->set(['id_jurnal' => $id_jurnal])->update();
 
 			$response = [
 				'success' => true,

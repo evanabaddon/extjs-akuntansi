@@ -443,11 +443,12 @@ Ext.define('Admin.view.penjualan.EditDetailBarang', {
 
         var e_subtotal = me.up('penjualan-edit').down('#subtotal');
         var e_totalpajak = me.up('penjualan-edit').down('#totalpajak');
+        var e_uangmuka = me.up('penjualan-edit').down('#uangmuka');
         var e_total = me.up('penjualan-edit').down('#total');
 
         e_subtotal.setValue(subtotal);
         e_totalpajak.setValue(totalpajak);
-        e_total.setValue(subtotal+totalpajak);
+        e_total.setValue(subtotal+totalpajak-eval(e_uangmuka.getSubmitValue()));
     },
     
     getDetail: function() {

@@ -14,7 +14,7 @@ class JualFakturHead extends Model
     protected $returnType           = 'array';
     protected $useSoftDeletes       = false;
     protected $protectFields        = true;
-    protected $allowedFields        = ['id', 'notrx', 'tanggal', 'id_customer', 'pembayaran', 'jenis_trx', 'no_so', 'keterangan', 'subtotal', 'totalpajak', 'voucher', 'total', 'id_jurnal',
+    protected $allowedFields        = ['id', 'notrx', 'tanggal', 'id_customer', 'pembayaran', 'jenis_trx', 'no_so', 'keterangan', 'subtotal', 'totalpajak', 'uangmuka', 'voucher', 'total', 'id_jurnal',
                                        'user_create', 'date_create', 'user_update', 'date_update'];
 
     // Dates
