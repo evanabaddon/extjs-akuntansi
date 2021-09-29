@@ -305,17 +305,9 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '110101001',
-					'keterangan' => 'Kas',
+					'keterangan' => 'Uang Muka',
 					'debet'      => $this->request->getPost('uangmuka'),
 					'kredit'     => 0
-				]);
-
-				$detail->insert([
-					'id_jurnal'  => $id_jurnal,
-					'kode_akun'  => '2104',
-					'keterangan' => 'Uang Muka',
-					'debet'      => 0,
-					'kredit'     => $this->request->getPost('uangmuka')
 				]);
 			}
 
@@ -474,17 +466,9 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '110101001',
-					'keterangan' => 'Kas',
+					'keterangan' => 'Uang Muka',
 					'debet'      => $this->request->getPost('uangmuka'),
 					'kredit'     => 0
-				]);
-
-				$detail->insert([
-					'id_jurnal'  => $id_jurnal,
-					'kode_akun'  => '2104',
-					'keterangan' => 'Uang Muka',
-					'debet'      => 0,
-					'kredit'     => $this->request->getPost('uangmuka')
 				]);
 			}
 
@@ -737,17 +721,9 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '110101001',
-					'keterangan' => 'Kas',
+					'keterangan' => 'Uang Muka',
 					'debet'      => $this->request->getPost('uangmuka'),
 					'kredit'     => 0
-				]);
-
-				$detail->insert([
-					'id_jurnal'  => $id_jurnal,
-					'kode_akun'  => '2104',
-					'keterangan' => 'Uang Muka',
-					'debet'      => 0,
-					'kredit'     => $this->request->getPost('uangmuka')
 				]);
 			}
 
@@ -884,17 +860,9 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '110101001',
-					'keterangan' => 'Kas',
+					'keterangan' => 'Uang Muka',
 					'debet'      => $this->request->getPost('uangmuka'),
 					'kredit'     => 0
-				]);
-
-				$detail->insert([
-					'id_jurnal'  => $id_jurnal,
-					'kode_akun'  => '2104',
-					'keterangan' => 'Uang Muka',
-					'debet'      => 0,
-					'kredit'     => $this->request->getPost('uangmuka')
 				]);
 			}
 
