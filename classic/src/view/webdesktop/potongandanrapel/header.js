@@ -1,4 +1,4 @@
-Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.header', {
+Ext.define('Admin.view.webdesktop.potongandanrapel.header', {
 
     extend: 'Ext.panel.Panel',
     alias : 'widget.transaksipotonganabsenheader',

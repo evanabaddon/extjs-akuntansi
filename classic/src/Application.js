@@ -4,21 +4,11 @@ Ext.define('Admin.Application', {
     name: 'Admin',
 
     stores: [
-        'NavigationTree',
-        'stores'
+        'NavigationTree'
     ],
 
     controllers : [
-        'utama',
-        'user',
-        
-        'karyawan',
-        'gajiprorate',
-        'uttretail',
-        'uttmigas',
-        'uanghadir',
-        'potongan',
-        'prosesgaji'
+        'main'
     ],
 
     //defaultToken : 'dashboard',
@@ -26,7 +16,7 @@ Ext.define('Admin.Application', {
     // The name of the initial view to create. This class will gain a "viewport" plugin
     // if it does not extend Ext.Viewport.
     //
-    mainView: 'Admin.view.webdesktop.menu.VW_Menu', //'Admin.view.main.Main',
+    mainView: 'Admin.view.webdesktop.main.Main', //'Admin.view.main.Main',
 
     onAppUpdate: function () {
         Ext.Msg.confirm('Application Update', 'This application has an update, reload?',

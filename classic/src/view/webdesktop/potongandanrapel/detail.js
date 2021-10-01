@@ -1,4 +1,4 @@
-Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.detail', {
+Ext.define('Admin.view.webdesktop.potongandanrapel.detail', {
 
     extend: 'Ext.grid.Panel',
     alias : 'widget.transaksipotonganabsendetail',
@@ -536,7 +536,7 @@ Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.detail', {
         var me = this;
         Ext.Ajax.request({
             method:'POST',
-            url: 'api/store/transaksi_potongan_absen/dataStore.php',
+            url: 'api/store/potongandanrapel/dataStore.php',
             params: {periode: periode},
             success: function(response) {
                 var json = Ext.JSON.decode(response.responseText);

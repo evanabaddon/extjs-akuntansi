@@ -1,4 +1,4 @@
-Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.edit', {
+Ext.define('Admin.view.webdesktop.potongandanrapel.edit', {
 
     extend: 'Ext.window.Window',
     alias : 'widget.transaksipotonganabsenedit',
@@ -22,7 +22,7 @@ Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.edit', {
                 flex: 1,
                 border: false,
                 reader: new Ext.data.JsonReader({
-                    model: 'Admin.model.transaksi_potongan_absen.edit',
+                    model: 'Admin.model.potongandanrapel.edit',
                     rootProperty: 'results',
                     totalProperty: 'total'
                 }),
@@ -60,7 +60,7 @@ Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.edit', {
                 form.getForm().waitMsgTarget = me.getEl();
                 form.getForm().load({
                     params: {nobukti: me.isEdit},
-                    url: 'api/store/transaksi_potongan_absen/dataLoad.php',
+                    url: 'api/store/potongandanrapel/dataLoad.php',
                     //waitMsg: 'Loading...',
                     success: function(f, a) {
                         var json = form.reader.jsonData;

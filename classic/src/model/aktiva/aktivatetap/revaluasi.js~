@@ -1,4 +1,0 @@
-Ext.define('Admin.model.aktivatetap.revaluasi', {
-    extend: 'Ext.data.Model',
-    fields: ['tanggal',  'nilai', 'akun', 'umur', 'metode', 'namametode', 'nilaibaru', 'residu']
-});

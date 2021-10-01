@@ -295,7 +295,7 @@ class Penjualan extends BaseController
 			$detail->insert([
                 'id_jurnal'  => $id_jurnal,
                 'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
-                'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+                'keterangan' => 'Penjualan '.$this->request->getPost('jenistrx'),
                 'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
                 'kredit'     => 0
             ]);
@@ -314,7 +314,7 @@ class Penjualan extends BaseController
 			//3: PENJUALAN
 			$detail->insert([
                 'id_jurnal'  => $id_jurnal,
-                'kode_akun'  => '4140',
+                'kode_akun'  => '4101',
                 'keterangan' => 'Penjualan',
                 'debet'      => 0,
                 'kredit'     => $this->request->getPost('subtotal')
@@ -325,7 +325,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN',
+					'keterangan' => 'PPN keluaran',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);
@@ -456,7 +456,7 @@ class Penjualan extends BaseController
 			$detail->insert([
 				'id_jurnal'  => $id_jurnal,
 				'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
-				'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+				'keterangan' => 'Penjualan '.$this->request->getPost('jenistrx'),
 				'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
 				'kredit'     => 0
 			]);
@@ -475,7 +475,7 @@ class Penjualan extends BaseController
 			//3: PENJUALAN
 			$detail->insert([
 				'id_jurnal'  => $id_jurnal,
-				'kode_akun'  => '4140',
+				'kode_akun'  => '4101',
 				'keterangan' => 'Penjualan',
 				'debet'      => 0,
 				'kredit'     => $this->request->getPost('subtotal')
@@ -486,7 +486,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN',
+					'keterangan' => 'PPN keluaran',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);
@@ -711,7 +711,7 @@ class Penjualan extends BaseController
 			$detail->insert([
                 'id_jurnal'  => $id_jurnal,
                 'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
-                'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+                'keterangan' => 'Penjualan '.$this->request->getPost('jenistrx'),
                 'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
                 'kredit'     => 0
             ]);
@@ -730,7 +730,7 @@ class Penjualan extends BaseController
 			//3: PENJUALAN
 			$detail->insert([
                 'id_jurnal'  => $id_jurnal,
-                'kode_akun'  => '4140',
+                'kode_akun'  => '4101',
                 'keterangan' => 'Penjualan',
                 'debet'      => 0,
                 'kredit'     => $this->request->getPost('subtotal')
@@ -741,7 +741,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN',
+					'keterangan' => 'PPN keluaran',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);
@@ -850,7 +850,7 @@ class Penjualan extends BaseController
 			$detail->insert([
 				'id_jurnal'  => $id_jurnal,
 				'kode_akun'  => $this->request->getPost('jenistrx')=='Cash'?'110101001':'110201003',
-				'keterangan' => $this->request->getPost('jenistrx')=='Cash'?'Kas':'Piutang',
+				'keterangan' => 'Penjualan '.$this->request->getPost('jenistrx'),
 				'debet'      => $this->request->getPost('subtotal')+$this->request->getPost('totalpajak')-$this->request->getPost('uangmuka'),
 				'kredit'     => 0
 			]);
@@ -869,7 +869,7 @@ class Penjualan extends BaseController
 			//3: PENJUALAN
 			$detail->insert([
 				'id_jurnal'  => $id_jurnal,
-				'kode_akun'  => '4140',
+				'kode_akun'  => '4101',
 				'keterangan' => 'Penjualan',
 				'debet'      => 0,
 				'kredit'     => $this->request->getPost('subtotal')
@@ -880,7 +880,7 @@ class Penjualan extends BaseController
 				$detail->insert([
 					'id_jurnal'  => $id_jurnal,
 					'kode_akun'  => '210104',
-					'keterangan' => 'PPN',
+					'keterangan' => 'PPN keluaran',
 					'debet'      => 0,
 					'kredit'     => $this->request->getPost('totalpajak')
 				]);

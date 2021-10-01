@@ -1,7 +1,6 @@
 Ext.define('Admin.view.webdesktop.login.Window',{
     extend 	: 'Ext.Window',
     xtype: 'webdesktop-login',
-
     controller: 'webdesktop-login',
 
     width: 400,

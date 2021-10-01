@@ -14,7 +14,7 @@ Ext.define('Admin.view.webdesktop.login.loginController', {
                 waitMsg: 'Login...',
                 success:function(frm, action) {
                     view.close();
-                    view.usermenu.fireEvent('afterrender', view.usermenu);
+                    view.mainView.fireEvent('afterrender', view.mainView);
                 },
                 failure:function(frm, action) {
                     var json = Ext.JSON.decode(action.response.responseText);

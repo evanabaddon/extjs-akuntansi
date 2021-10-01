@@ -164,6 +164,8 @@ $routes->add('jurnalmemorial/insert', 'JurnalMemorial::insert');
 $routes->add('jurnalmemorial/(:segment)/update', 'JurnalMemorial::update/$1');
 $routes->get('jurnalmemorial/getnobukti', 'JurnalMemorial::getNoBukti');
 
+$routes->get('laporan/jurnal', 'Laporan::jurnal');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

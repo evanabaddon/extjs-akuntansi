@@ -1,4 +1,4 @@
-Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.tombol', {
+Ext.define('Admin.view.webdesktop.potongandanrapel.tombol', {
     
     extend: 'Ext.panel.Panel',
     alias : 'widget.transaksipotonganabsentombol',

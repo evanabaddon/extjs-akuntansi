@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="neraca" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1aacebee-ed59-4332-8c93-909b2e047a85">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="TO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[CALL `lap_akunting_neraca`($P{TO})]]>
+	</queryString>
+	<field name="id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kode_akun" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_akun" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SAMPAI" class="java.lang.String"/>
+	<field name="kode_akun_parent" class="java.lang.String"/>
+	<field name="nama_akun_parent" class="java.lang.String"/>
+	<field name="TIPE" class="java.lang.String">
+		<fieldDescription><![CDATA[1: Divisi; 2: Project]]></fieldDescription>
+	</field>
+	<field name="TIPEX" class="java.lang.String"/>
+	<field name="TIPEXX" class="java.lang.String"/>
+	<field name="SALDOAKHIR" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SALDOAKHIR_XX" class="java.lang.Double"/>
+	<variable name="TOTAL_LEVEL_3_PARENT" class="java.lang.Double" resetType="Group" resetGroup="LEVEL_3_PARENT" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDOAKHIR}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_LEVEL_2_PARENT" class="java.lang.Double" resetType="Group" resetGroup="LEVEL_2_PARENT_1" calculation="Sum">
+		<variableExpression><![CDATA[$F{SALDOAKHIR}]]></variableExpression>
+	</variable>
+	<group name="LEVEL_2_PARENT_1">
+		<groupExpression><![CDATA[$F{TIPEXX}]]></groupExpression>
+		<groupHeader>
+			<band height="17">
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement x="30" y="0" width="525" height="17" uuid="c073bd5d-058a-4919-9228-1402500919c0"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TIPEXX}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="49">
+				<textField>
+					<reportElement x="30" y="0" width="434" height="17" uuid="d18eea90-ac3a-49a2-a39d-35befd136a27"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["TOTAL "+$F{TIPEXX}+": "]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;(-#,##0)" isBlankWhenNull="true">
+					<reportElement x="464" y="0" width="80" height="17" uuid="24d0e455-0486-4d5a-93bb-e8de42b046b2"/>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_LEVEL_2_PARENT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="LEVEL_3_PARENT">
+		<groupExpression><![CDATA[$F{nama_akun_parent}]]></groupExpression>
+		<groupHeader>
+			<band height="17">
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement x="49" y="0" width="506" height="17" uuid="7d5ef1ba-1d6f-441f-8cb2-5b1fe9bc1ee7"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="false" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nama_akun_parent}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="18">
+				<line>
+					<reportElement x="374" y="0" width="100" height="1" uuid="bdb2bdf4-c675-4d7e-b319-7b8c9c461fac"/>
+				</line>
+				<textField pattern="#,##0;(-#,##0)" isBlankWhenNull="true">
+					<reportElement x="384" y="1" width="80" height="17" uuid="a6d0a74d-c1a3-44b5-88b9-5c83741b22fc"/>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{TOTAL_LEVEL_3_PARENT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="67" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="17" width="555" height="17" uuid="9c23bed0-c169-4b24-b5ae-712f378072a7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PER TANGGAL  "+$F{SAMPAI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="555" height="17" uuid="88f1eac4-e3f0-43f2-8071-d4cac0a58a38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["LAPORAN NERACA"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17">
+			<printWhenExpression><![CDATA[!$F{id}.equalsIgnoreCase("148")]]></printWhenExpression>
+			<textField>
+				<reportElement x="64" y="0" width="320" height="17" uuid="f682b88e-ef6e-4ef9-b8c3-cf0f58807996"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}.equalsIgnoreCase("152")?"Laba Tahun Berjalan":$F{nama_akun}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;(-#,##0)" isBlankWhenNull="true">
+				<reportElement x="384" y="0" width="80" height="17" uuid="8739b994-3971-4cd8-acee-7beeac8fd5c2"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}.equalsIgnoreCase("152")?$F{SALDOAKHIR_XX}:$F{SALDOAKHIR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="31" splitType="Stretch"/>
+	</summary>
+</jasperReport>

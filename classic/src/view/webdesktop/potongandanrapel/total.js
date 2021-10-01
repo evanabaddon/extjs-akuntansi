@@ -1,7 +1,7 @@
-Ext.define('Admin.view.webdesktop.transaksi_potongan_absen.total', {
+Ext.define('Admin.view.webdesktop.potongandanrapel.total', {
 
     extend: 'Ext.panel.Panel',
-    alias : 'widget.transaksi_potongan_absentotal',
+    alias : 'widget.potongandanrapeltotal',
 
     layout: 'fit',
     border : false,

@@ -12227,8 +12227,8 @@ tr.x-grid-subtable-row {
         height: 540px;
     }
 }
-/* D:/www/extjs-akuntansi/classic/src/view/webdesktop/menu/VW_Menu.scss:1 */
-.utama {
+/* D:/www/extjs-akuntansi/classic/src/view/webdesktop/main/Main.scss:1 */
+.webdesktop-main {
     background-image: url('images/webdesktop-bg.jpg');
     background-size: cover;
     background-repeat: repeat;
@@ -12981,58 +12981,6 @@ tr.x-grid-subtable-row {
 /* D:/www/extjs-akuntansi/classic/src/view/email/Inbox.scss:17 */
 .email-inbox-panel .x-grid-cell-special {
     border-right-width: 0;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:1 */
-.soal-all {
-    background-color: #f6f6f6;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:4 */
-.soal-all .soal {
-    background-color: #fff;
-    margin: 5px 0 5px 0;
-    padding: 10px;
-    max-width: 100%;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:11 */
-.soal-all .soal img {
-    max-width: 100%;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:15 */
-.soal-all .soal .selector {
-    background-color: #fff;
-    width: 165px;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:20 */
-.soal-all .soal .subtitle {
-    background-color: #8c8c8c;
-    color: white;
-    padding: 10px;
-    margin: 10px 0 10px 0;
-    font-weight: 700;
-    font-size: 1.2em;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:31 */
-.soal-all button {
-    /* Set a style for all buttons */
-    background-color: #04aa6d;
-    color: white;
-    padding: 5px;
-    width: 80px;
-    border: none;
-    cursor: pointer;
-    opacity: 0.9;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:41 */
-.soal-all button:hover {
-    opacity: 1;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:45 */
-.soal-all .deletebtn {
-    background-color: #f44336;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/essai/EssaiList.scss:49 */
-.soal-all .editbtn {
-    margin: 0 0 0 5px;
 }
 /* D:/www/extjs-akuntansi/classic/src/view/forms/Wizards.scss:1 */
 .wizards .x-panel {
@@ -14628,57 +14576,6 @@ tr.x-grid-subtable-row {
 .x-btn-pressed .x-btn-icon-el-wizard-soft-green-small {
     color: #404040;
 }
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiList.scss:2 */
-.informasiCls .x-grid-cell-inner {
-    padding: 15px;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiList.scss:5 */
-.informasiCls .x-grid-cell-inner div {
-    white-space: normal;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiList.scss:9 */
-.informasiCls .x-grid-cell-inner .resultsTitleCls {
-    font-size: 14px;
-    color: #333;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiList.scss:14 */
-.informasiCls .x-grid-cell-inner .resultsUrlCls a {
-    color: #35baf6;
-    text-decoration: none;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiList.scss:18 */
-.informasiCls .x-grid-cell-inner .resultsUrlCls a:hover {
-    text-decoration: underline;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiList.scss:23 */
-.informasiCls .x-grid-cell-inner .imageRowCls img {
-    margin-right: 15px;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiView.scss:1 */
-.informasi-view {
-    background-color: #fff;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiView.scss:4 */
-.informasi-view .informasi {
-    padding: 10px;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiView.scss:7 */
-.informasi-view .informasi img {
-    max-width: 100%;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiView.scss:11 */
-.informasi-view .informasi .subtitle {
-    background-color: #8c8c8c;
-    color: white;
-    padding: 10px;
-    margin: 10px 0 10px 0;
-    font-weight: 700;
-    font-size: 1.2em;
-}
-/* D:/www/extjs-akuntansi/classic/src/view/informasi/InformasiView.scss:20 */
-.informasi-view .informasi .soal {
-    padding: 10px;
-}
 /* D:/www/extjs-akuntansi/classic/src/view/inventori/InventoriList.scss:2 */
 .inventori-grid .x-grid-td {
     vertical-align: middle;
@@ -14792,6 +14689,18 @@ tr.x-grid-subtable-row {
 /* D:/www/extjs-akuntansi/classic/src/view/kasbankmasuk/KasBankMasukList.scss:14 */
 .x-action-col-icon {
     font-size: 13px !important;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/jurnal/JurnalList.scss:2 */
+.laporan-jurnal-grid .x-grid-td {
+    vertical-align: middle;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/jurnal/JurnalList.scss:6 */
+.laporan-jurnal-grid .x-grid-body {
+    border-width: 1px;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/jurnal/JurnalList.scss:10 */
+.laporan-jurnal-grid .groupsummary {
+    background-color: green;
 }
 /* D:/www/extjs-akuntansi/classic/src/view/main/Main.scss:48 */
 .big-100 {
@@ -15344,4 +15253,78 @@ tr.x-grid-subtable-row {
 .x-btn.x-btn-disabled .x-btn-soft-blue-small-tc,
 .x-btn.x-btn-disabled .x-btn-soft-blue-small-bc {
     background-image: url(images/btn/btn-soft-blue-small-disabled-corners.gif);
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3103 */
+.x-btn.x-btn-disabled .x-btn-soft-blue-small-ml,
+.x-btn.x-btn-disabled .x-btn-soft-blue-small-mr {
+    background-image: url(images/btn/btn-soft-blue-small-disabled-sides.gif);
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3107 */
+.x-btn.x-btn-disabled .x-btn-soft-blue-small-mc {
+    background-color: #2eadf5;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3117 */
+.x-nbr .x-btn-soft-blue-small {
+    background-image: none;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3123 */
+.x-btn-disabled.x-btn-soft-blue-small {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    opacity: 0.5;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3142 */
+.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small.x-segmented-button-first {
+    border-right-width: 1px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3144 */
+.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small.x-segmented-button-first .x-btn-soft-blue-small-mc {
+    padding-right: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3148 */
+.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small.x-segmented-button-middle {
+    border-right-width: 1px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3150 */
+.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small.x-segmented-button-middle .x-btn-soft-blue-small-mc {
+    padding-right: 7px !important;
+    padding-left: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3156 */
+.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small.x-segmented-button-last .x-btn-soft-blue-small-mc {
+    padding-left: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3163 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-first {
+    border-bottom-width: 1px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3165 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-first .x-btn-soft-blue-small-mc {
+    padding-bottom: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3169 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-middle {
+    border-bottom-width: 1px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3171 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-middle .x-btn-soft-blue-small-mc {
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3177 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-last .x-btn-soft-blue-small-mc {
+    padding-top: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3183 */
+.x-nbr .x-segmented-button-item.x-btn-soft-blue-small:after {
+    content: ' ';
+    border-style: solid;
+    border-width: 0;
+    position: absolute;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3201 */
+.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small:after {
+    top: 1px;
+    right: 0;
+    bottom: 1px;
+    left: 0;
 }

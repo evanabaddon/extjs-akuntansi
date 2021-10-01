@@ -278,17 +278,17 @@ CREATE TABLE IF NOT EXISTS `jual_faktur_detail` (
   `pajak` varchar(50) DEFAULT NULL,
   `jumlah` double NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 -- Dumping data for table webdesktop_altersms.jual_faktur_detail: ~5 rows (approximately)
 DELETE FROM `jual_faktur_detail`;
 /*!40000 ALTER TABLE `jual_faktur_detail` DISABLE KEYS */;
 INSERT INTO `jual_faktur_detail` (`id`, `id_head`, `id_barang`, `nama_barang`, `jenis_barang`, `qty`, `satuan`, `harga`, `diskon`, `pajak`, `jumlah`) VALUES
-	(14, 2, 118, 'Voucher Internet 500MB', 3, 250, 'Pcs', 5000, '0', 'PPN', 1250000),
-	(27, 1, 1, 'SSD Adata 250GB', 1, 1, 'PCS', 450000, '0', 'PPN', 450000),
-	(28, 1, 7, 'Laptop Asus Core i7', 1, 1, 'Unit', 2750000, '0', 'PPN', 2750000),
-	(29, 1, 5, 'Buku Tulis Bola Dunia', 1, 100, 'PCS', 3500, '0', 'PPN', 350000),
-	(30, 1, 119, 'Jasa Pemasangan Internet', 2, 1, 'Paket', 500000, '0', 'PPN', 500000);
+	(31, 1, 1, 'SSD Adata 250GB', 1, 1, 'PCS', 450000, '0', 'PPN', 450000),
+	(32, 1, 7, 'Laptop Asus Core i7', 1, 1, 'Unit', 2750000, '0', 'PPN', 2750000),
+	(33, 1, 5, 'Buku Tulis Bola Dunia', 1, 100, 'PCS', 3500, '0', 'PPN', 350000),
+	(34, 1, 119, 'Jasa Pemasangan Internet', 2, 1, 'Paket', 500000, '0', 'PPN', 500000),
+	(35, 2, 118, 'Voucher Internet 500MB', 3, 250, 'Pcs', 5000, '0', 'PPN', 1250000);
 /*!40000 ALTER TABLE `jual_faktur_detail` ENABLE KEYS */;
 
 -- Dumping structure for table webdesktop_altersms.jual_faktur_head
@@ -318,8 +318,8 @@ CREATE TABLE IF NOT EXISTS `jual_faktur_head` (
 DELETE FROM `jual_faktur_head`;
 /*!40000 ALTER TABLE `jual_faktur_head` DISABLE KEYS */;
 INSERT INTO `jual_faktur_head` (`id`, `notrx`, `tanggal`, `id_customer`, `no_so`, `pembayaran`, `jenis_trx`, `keterangan`, `subtotal`, `totalpajak`, `voucher`, `uangmuka`, `total`, `id_jurnal`, `user_create`, `date_create`, `user_update`, `date_update`) VALUES
-	(1, 'JL-00001', '2021-09-29', 9, NULL, 'Kredit', '1', 'Penjualan Kredit Tes', 4050000, 405000, 0, 3200000, 1255000, 6, NULL, '2021-09-29 02:21:10', NULL, '2021-09-29 06:20:35'),
-	(2, 'JL-00002', '2021-09-29', 13, NULL, 'Cash', '2', 'Penjulana oucher kawab', 1250000, 125000, 0, 0, 1375000, 2, NULL, '2021-09-29 02:32:44', NULL, '2021-09-29 06:13:07');
+	(1, 'JL-00001', '2021-09-29', 9, NULL, 'Kredit', '1', 'Penjualan Kredit Tes', 4050000, 405000, 0, 3200000, 1255000, 7, NULL, '2021-09-29 02:21:10', NULL, '2021-09-30 05:18:15'),
+	(2, 'JL-00002', '2021-09-29', 13, NULL, 'Cash', '2', 'Penjulana oucher kawab', 1250000, 125000, 0, 0, 1375000, 8, NULL, '2021-09-29 02:32:44', NULL, '2021-09-30 05:20:20');
 /*!40000 ALTER TABLE `jual_faktur_head` ENABLE KEYS */;
 
 -- Dumping structure for table webdesktop_altersms.jurnal
@@ -335,15 +335,14 @@ CREATE TABLE IF NOT EXISTS `jurnal` (
   `user_update` int(11) DEFAULT NULL,
   `date_update` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Dumping data for table webdesktop_altersms.jurnal: ~3 rows (approximately)
+-- Dumping data for table webdesktop_altersms.jurnal: ~2 rows (approximately)
 DELETE FROM `jurnal`;
 /*!40000 ALTER TABLE `jurnal` DISABLE KEYS */;
 INSERT INTO `jurnal` (`id`, `nobukti`, `tanggal`, `keterangan`, `tipe_jurnal`, `total`, `user_create`, `date_create`, `user_update`, `date_update`) VALUES
-	(1, 'JM-00001', '2021-09-28', 'Jurnal Memorial Test', 'JMM', 1000, 0, '2021-09-28 05:31:15', 0, '2021-09-28 05:52:10'),
-	(2, 'JL-00002', '2021-09-29', 'Penjulana oucher kawab', 'PJL', 1375000, 0, '2021-09-29 06:13:07', 0, '2021-09-29 06:13:07'),
-	(6, 'JL-00001', '2021-09-29', 'Penjualan Kredit Tes', 'PJL', 4455000, 0, '2021-09-29 06:20:35', 0, '2021-09-29 06:20:35');
+	(7, 'JL-00001', '2021-09-29', 'Penjualan Kredit Tes', 'PJL', 4455000, 0, '2021-09-30 05:18:15', 0, '2021-09-30 05:18:15'),
+	(8, 'JL-00002', '2021-09-29', 'Penjulana oucher kawab', 'PJL', 1375000, 0, '2021-09-30 05:20:20', 0, '2021-09-30 05:20:20');
 /*!40000 ALTER TABLE `jurnal` ENABLE KEYS */;
 
 -- Dumping structure for procedure webdesktop_altersms.jurnal_buktikasdanbank
@@ -406,22 +405,19 @@ CREATE TABLE IF NOT EXISTS `jurnal_detail` (
   `debet` double DEFAULT NULL,
   `kredit` double DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
 
--- Dumping data for table webdesktop_altersms.jurnal_detail: ~10 rows (approximately)
+-- Dumping data for table webdesktop_altersms.jurnal_detail: ~7 rows (approximately)
 DELETE FROM `jurnal_detail`;
 /*!40000 ALTER TABLE `jurnal_detail` DISABLE KEYS */;
 INSERT INTO `jurnal_detail` (`id`, `id_jurnal`, `kode_akun`, `keterangan`, `debet`, `kredit`) VALUES
-	(6, 1, '110101001', 'Kas Berar', 1000, 0),
-	(7, 1, '110201001', 'Piutang', 0, 1000),
-	(8, 2, '110101001', 'Kas', 1375000, 0),
-	(9, 2, '4140', 'Penjualan', 0, 1250000),
-	(10, 2, '210104', 'PPN Keluaran', 0, 125000),
-	(26, 6, '110201003', 'Piutang', 1255000, 0),
-	(27, 6, '110101001', 'Kas', 3200000, 0),
-	(28, 6, '2104', 'Uang Muka', 0, 3200000),
-	(29, 6, '4140', 'Penjualan', 0, 4050000),
-	(30, 6, '210104', 'PPN Keluaran', 0, 405000);
+	(31, 7, '110201003', 'Piutang', 1255000, 0),
+	(32, 7, '110101001', 'Uang Muka', 3200000, 0),
+	(33, 7, '4101', 'Penjualan', 0, 4050000),
+	(34, 7, '210104', 'PPN', 0, 405000),
+	(35, 8, '110101001', 'Kas', 1375000, 0),
+	(36, 8, '4101', 'Penjualan', 0, 1250000),
+	(37, 8, '210104', 'PPN', 0, 125000);
 /*!40000 ALTER TABLE `jurnal_detail` ENABLE KEYS */;
 
 -- Dumping structure for procedure webdesktop_altersms.jurnal_memorial
@@ -451,7 +447,7 @@ DELIMITER ;
 
 -- Dumping structure for table webdesktop_altersms.jurnal_srb
 CREATE TABLE IF NOT EXISTS `jurnal_srb` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(21) NOT NULL AUTO_INCREMENT,
   `tanggal` date DEFAULT NULL,
   `jenis` varchar(10) DEFAULT NULL,
   `kd` varchar(50) DEFAULT NULL,
@@ -591,27 +587,92 @@ BEGIN
 SET @NO:=0, @NOBUKTI:='';
 
 SELECT 
+
 	DATE_FORMAT(P_FROM, '%d-%m-%Y') AS DARI,
 	DATE_FORMAT(P_TO, '%d-%m-%Y') AS SAMPAI,
-	IF(LENGTH(P_NAMA_TIPE)=0, '[Semua]', P_NAMA_TIPE) AS NAMA_TIPE,  
-	NO AS no, 
-	COALESCE(DATE_FORMAT(BARU.tanggal_t, '%d-%m-%Y'), '') AS tanggal, 
-	BARU.nobukti_t,
-	BARU.coa AS norek, 
-	LAMA.nama_akun,
-	BARU.keterangan, 
-	BARU.debet, 
-	BARU.kredit, 
-	BARU.tipe_jurnal 
+	IF(LENGTH(P_NAMA_TIPE)=0, '[Semua]', P_NAMA_TIPE) AS NAMA_TIPE,
+	
+	IF(@NOBUKTI!=J.nobukti, @NO:=@NO+1, '') NO, 
+	IF(@NOBUKTI!=J.nobukti, DATE_FORMAT(J.tanggal, '%d-%m-%Y'), '') tanggal_t, 
+	IF(@NOBUKTI!=J.nobukti, J.nobukti, '') nobukti_t, 
+	@NOBUKTI:=J.nobukti, 
+	IF(J.debet-J.kredit>0, 1, 2) urut,
+	
+	J.nobukti,
+	J.kode_akun,
+	J.nama_akun,
+	J.keterangan,
+	J.debet,
+	J.kredit
+
 FROM (
-SELECT *, IF(@NOBUKTI<>nobukti, @NO:=@NO+1, '') AS NO, IF(@NOBUKTI<>nobukti, tanggal, '') AS tanggal_t, IF(@NOBUKTI<>nobukti, nobukti, '') AS nobukti_t, @NOBUKTI:=nobukti, IF(debet-kredit>0,1,2) AS urut FROM ( 
-	(SELECT DISTINCT(IF(jenis='Debet', kd, kk)) AS coa, IF(jenis='Debet', ket, ket2) AS keterangan, SUM(IF(jenis='Debet', jumlah, 0)) AS debet, SUM(IF(jenis='Kredit', jumlah, 0)) AS kredit, nobukti, tanggal, tipe_jurnal FROM jurnal_srb WHERE tanggal BETWEEN P_FROM AND P_TO AND IF(LENGTH(P_TIPE)>0, tipe_jurnal=P_TIPE, 1) GROUP BY nobukti) 
-		UNION ALL 
-	(SELECT IF(jenis='Debet', kk, kd) AS coa, IF(jenis='Debet', ket2, ket) AS keterangan, IF(jenis='Debet', 0, jumlah) AS debet, IF(jenis='Kredit', 0, jumlah) AS kredit, nobukti, tanggal, tipe_jurnal FROM jurnal_srb WHERE tanggal BETWEEN P_FROM AND P_TO AND IF(LENGTH(P_TIPE)>0, tipe_jurnal=P_TIPE, 1) ORDER BY nobukti) 
-		UNION ALL
-	(SELECT A.coa, A.keterangan, A.debet, A.kredit, A.nobukti, B.tanggal, B.tipe_jurnal FROM jurnal_detail AS A, jurnal AS B WHERE A.nobukti=B.nobukti AND B.tanggal BETWEEN P_FROM AND P_TO AND IF(LENGTH(P_TIPE)>0, B.tipe_jurnal=P_TIPE, 1) )
-) AS T ORDER BY nobukti, urut 
-) AS BARU LEFT JOIN rekening AS LAMA ON BARU.coa=LAMA.kode_akun;
+	
+	SELECT 
+		T.*,
+		R.nama_akun	
+	FROM ( 
+		
+		(SELECT 
+			id,
+			nobukti,
+			tanggal,
+			tipe_jurnal,
+			IF(jenis='Debet', kd, kk) kode_akun,
+			IF(jenis='Debet', ket, ket2) keterangan,
+			SUM(IF(jenis='Debet', jumlah, 0)) debet,
+			SUM(IF(jenis='Kredit', jumlah, 0)) kredit
+		FROM 
+			jurnal_srb 
+		WHERE 
+			tanggal BETWEEN P_FROM AND P_TO AND 
+			IF(LENGTH(P_TIPE)>0, tipe_jurnal=P_TIPE, 1) 
+		GROUP BY 
+			nobukti
+		) UNION ALL 
+		(SELECT 
+			id,
+			nobukti,
+			tanggal,
+			tipe_jurnal,
+			IF(jenis='Debet', kk, kd) kode_akun,
+			IF(jenis='Debet', ket2, ket) keterangan,
+			IF(jenis='Debet', 0, jumlah) debet,
+			IF(jenis='Kredit', 0, jumlah) kredit
+		FROM 
+			jurnal_srb 
+		WHERE 
+			tanggal BETWEEN P_FROM AND P_TO AND 
+			IF(LENGTH(P_TIPE)>0, tipe_jurnal=P_TIPE, 1)
+		) UNION ALL
+		(SELECT 
+			A.id,
+			B.nobukti,
+			B.tanggal,
+			B.tipe_jurnal,
+			A.kode_akun,
+			A.keterangan,
+			A.debet,
+			A.kredit
+		FROM 
+			jurnal_detail A, 
+			jurnal B 
+		WHERE 
+			A.id_jurnal=B.id AND 
+			B.tanggal BETWEEN P_FROM AND P_TO AND 
+			IF(LENGTH(P_TIPE)>0, B.tipe_jurnal=P_TIPE, 1)
+		)
+	) T LEFT JOIN 
+	rekening R ON R.kode_akun=T.kode_akun
+	ORDER BY 
+		T.nobukti, 
+		IF(T.debet-T.kredit>0, 1, 2),
+		T.id
+		
+) J;
+
+	
+	
+	
 END//
 DELIMITER ;
 
@@ -1000,7 +1061,7 @@ INSERT INTO `modul` (`id`, `id_parent`, `text`, `iconCls`, `rowCls`, `viewType`,
 	(4, 25, 'Jurnal Umum', 'task-folder', '', '', '', 'Admin.view.webdesktop.jurnalumum.list', 2, 'YYYN', 1),
 	(5, 24, 'Kas & Bank Keluar', 'task-folder', '', '', '', 'Admin.view.webdesktop.kasbankkeluar.list', 2, 'YYYN', 1),
 	(6, 24, 'Kas & Bank Masuk', 'task-folder', '', '', '', 'Admin.view.webdesktop.kasbankmasuk.list', 1, 'YYYN', 1),
-	(7, 23, 'Jurnal', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.akuntansi.jurnal', 1, 'NNNY', 1),
+	(7, 23, 'Jurnal', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.jurnal.list', 1, 'NNNY', 1),
 	(8, 23, 'Buku Besar', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.akuntansi.bukubesar', 2, 'NNNY', 1),
 	(9, 23, 'Neraca Saldo', 'task-folder', '', '', '', 'Admin.view.webdesktop.akuntansi.neracasaldo', 3, 'NNNY', 1),
 	(10, 23, 'Laba Rugi', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.akuntansi.labarugi', 4, 'NNNY', 1),
@@ -17044,7 +17105,7 @@ CREATE TABLE IF NOT EXISTS `rekening` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
--- Dumping data for table webdesktop_altersms.rekening: ~87 rows (approximately)
+-- Dumping data for table webdesktop_altersms.rekening: ~86 rows (approximately)
 DELETE FROM `rekening`;
 /*!40000 ALTER TABLE `rekening` DISABLE KEYS */;
 INSERT INTO `rekening` (`id`, `id_parent`, `kode_akun`, `nama_akun`, `level`, `nomer_urut`, `saldonormal`, `tipe`, `saldoawal`, `debet`, `kredit`, `saldoakhir`, `keterangan`, `date_create`, `user_create`, `date_update`, `user_update`) VALUES
@@ -17052,7 +17113,7 @@ INSERT INTO `rekening` (`id`, `id_parent`, `kode_akun`, `nama_akun`, `level`, `n
 	(2, 1, '11', 'AKTIVA LANCAR', 2, 1, '', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(3, 2, '1101', 'Kas dan Bank', 3, 1, '', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(4, 3, '110101', 'Kas', 3, 1, '', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(5, 4, '110101001', 'Kas Besar', 4, 1, 'D', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
+	(5, 4, '110101001', 'Kas', 4, 1, 'D', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-29 14:21:42', NULL),
 	(8, 3, '110102', 'Bank', 3, 2, '', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(10, 8, '110102002', 'Bank Syariah Mandiri', 4, 2, 'D', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(12, 2, '1102', 'Piutang', 3, 2, '', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
@@ -17133,8 +17194,7 @@ INSERT INTO `rekening` (`id`, `id_parent`, `kode_akun`, `nama_akun`, `level`, `n
 	(267, 95, '110301', 'Asuransi Dibayar Dimuka', 3, 4, '', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:35:34', NULL),
 	(272, 253, '120104', 'Tanah dan Bangunan', 4, 2, 'D', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:47:40', NULL),
 	(273, 255, '120204', 'Akumulasi Penyusutan - Tanah dan Bangunan', 4, 5, 'K', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:50:15', NULL),
-	(280, 148, '4102', 'Penjualan Voucher', 4, 3, 'K', 'R', 0, 0, 0, 0, '', '2021-09-25 09:00:15', NULL, '2021-09-25 09:00:41', NULL),
-	(281, 114, '2104', 'Uang Muka Penjualan', 4, 4, 'K', 'P', 0, 0, 0, 0, '', '2021-09-29 05:26:47', NULL, '2021-09-29 05:27:37', NULL);
+	(280, 148, '4102', 'Penjualan Voucher', 4, 3, 'K', 'R', 0, 0, 0, 0, '', '2021-09-25 09:00:15', NULL, '2021-09-25 09:00:41', NULL);
 /*!40000 ALTER TABLE `rekening` ENABLE KEYS */;
 
 -- Dumping structure for table webdesktop_altersms.satuan
