@@ -15,16 +15,16 @@
 	<queryString>
 		<![CDATA[CALL `lap_akunting_bukubesar`($P{FROM}, $P{TO}, $P{KODE_AKUN})]]>
 	</queryString>
-	<field name="coa" class="java.lang.String">
+	<field name="kode_akun" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="keterangan" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="debet" class="java.math.BigDecimal">
+	<field name="debet" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="kredit" class="java.math.BigDecimal">
+	<field name="kredit" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="nobukti" class="java.lang.String">
@@ -33,10 +33,8 @@
 	<field name="tanggal" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="urut" class="java.lang.Long">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="saldo" class="java.math.BigDecimal"/>
+	<field name="urut" class="java.lang.Long"/>
+	<field name="saldo" class="java.lang.Double"/>
 	<field name="nama_akun" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -52,7 +50,7 @@
 	<field name="NO" class="java.lang.Long">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="saldo_akhir" class="java.math.BigDecimal"/>
+	<field name="saldo_akhir" class="java.lang.Double"/>
 	<variable name="TOT_DEBET" class="java.lang.Double" resetType="Group" resetGroup="kode_akun" calculation="Sum">
 		<variableExpression><![CDATA[$F{debet}]]></variableExpression>
 		<initialValueExpression><![CDATA[]]></initialValueExpression>
@@ -66,7 +64,7 @@
 		<initialValueExpression><![CDATA[]]></initialValueExpression>
 	</variable>
 	<group name="kode_akun">
-		<groupExpression><![CDATA[$F{coa}]]></groupExpression>
+		<groupExpression><![CDATA[$F{kode_akun}]]></groupExpression>
 		<groupHeader>
 			<band height="34">
 				<textField>
@@ -110,7 +108,7 @@
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Rekening: "+$F{coa}+" "+$F{nama_akun}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Rekening: "+$F{kode_akun}+" "+$F{nama_akun}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="85" y="17" width="60" height="17" uuid="b7ae8c21-fe19-4e75-93f9-0e453687ebf7"/>

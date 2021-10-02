@@ -1,3 +1,34 @@
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3165 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-first .x-btn-soft-blue-small-mc {
+    padding-bottom: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3169 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-middle {
+    border-bottom-width: 1px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3171 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-middle .x-btn-soft-blue-small-mc {
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3177 */
+.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-last .x-btn-soft-blue-small-mc {
+    padding-top: 7px !important;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3183 */
+.x-nbr .x-segmented-button-item.x-btn-soft-blue-small:after {
+    content: ' ';
+    border-style: solid;
+    border-width: 0;
+    position: absolute;
+}
+/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3201 */
+.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small:after {
+    top: 1px;
+    right: 0;
+    bottom: 1px;
+    left: 0;
+}
 /* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3207 */
 .x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small.x-segmented-button-first:after {
     left: 1px;

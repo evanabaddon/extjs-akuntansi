@@ -165,6 +165,8 @@ $routes->add('jurnalmemorial/(:segment)/update', 'JurnalMemorial::update/$1');
 $routes->get('jurnalmemorial/getnobukti', 'JurnalMemorial::getNoBukti');
 
 $routes->get('laporan/jurnal', 'Laporan::jurnal');
+$routes->get('laporan/bukubesar', 'Laporan::bukuBesar');
+$routes->get('laporan/neracasaldo', 'Laporan::neracaSaldo');
 
 /*
  * --------------------------------------------------------------------

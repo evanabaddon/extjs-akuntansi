@@ -14690,6 +14690,18 @@ tr.x-grid-subtable-row {
 .x-action-col-icon {
     font-size: 13px !important;
 }
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/bukubesar/BukuBesarList.scss:2 */
+.laporan-bukubesar-grid .x-grid-td {
+    vertical-align: middle;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/bukubesar/BukuBesarList.scss:6 */
+.laporan-bukubesar-grid .x-grid-body {
+    border-width: 1px;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/bukubesar/BukuBesarList.scss:10 */
+.laporan-bukubesar-grid .groupsummary {
+    background-color: green;
+}
 /* D:/www/extjs-akuntansi/classic/src/view/laporan/jurnal/JurnalList.scss:2 */
 .laporan-jurnal-grid .x-grid-td {
     vertical-align: middle;
@@ -14700,6 +14712,18 @@ tr.x-grid-subtable-row {
 }
 /* D:/www/extjs-akuntansi/classic/src/view/laporan/jurnal/JurnalList.scss:10 */
 .laporan-jurnal-grid .groupsummary {
+    background-color: green;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/neracasaldo/NeracaSaldoList.scss:2 */
+.laporan-neracasaldo-grid .x-grid-td {
+    vertical-align: middle;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/neracasaldo/NeracaSaldoList.scss:6 */
+.laporan-neracasaldo-grid .x-grid-body {
+    border-width: 1px;
+}
+/* D:/www/extjs-akuntansi/classic/src/view/laporan/neracasaldo/NeracaSaldoList.scss:10 */
+.laporan-neracasaldo-grid .groupsummary {
     background-color: green;
 }
 /* D:/www/extjs-akuntansi/classic/src/view/main/Main.scss:48 */
@@ -15296,35 +15320,4 @@ tr.x-grid-subtable-row {
 /* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3163 */
 .x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-first {
     border-bottom-width: 1px !important;
-}
-/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3165 */
-.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-first .x-btn-soft-blue-small-mc {
-    padding-bottom: 7px !important;
-}
-/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3169 */
-.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-middle {
-    border-bottom-width: 1px !important;
-}
-/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3171 */
-.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-middle .x-btn-soft-blue-small-mc {
-    padding-top: 7px !important;
-    padding-bottom: 7px !important;
-}
-/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3177 */
-.x-nbr .x-segmented-button-item-vertical.x-btn-soft-blue-small.x-segmented-button-last .x-btn-soft-blue-small-mc {
-    padding-top: 7px !important;
-}
-/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3183 */
-.x-nbr .x-segmented-button-item.x-btn-soft-blue-small:after {
-    content: ' ';
-    border-style: solid;
-    border-width: 0;
-    position: absolute;
-}
-/* D:/www/extjs-akuntansi/ext/classic/theme-neutral/sass/var/button/Button.scss:3201 */
-.x-nbr .x-segmented-button-item-horizontal.x-btn-soft-blue-small:after {
-    top: 1px;
-    right: 0;
-    bottom: 1px;
-    left: 0;
 }

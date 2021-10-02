@@ -471,13 +471,14 @@ CREATE TABLE IF NOT EXISTS `jurnal_srb` (
   `date_update` datetime DEFAULT NULL,
   `user_update` int(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
--- Dumping data for table webdesktop_altersms.jurnal_srb: ~1 rows (approximately)
+-- Dumping data for table webdesktop_altersms.jurnal_srb: ~2 rows (approximately)
 DELETE FROM `jurnal_srb`;
 /*!40000 ALTER TABLE `jurnal_srb` DISABLE KEYS */;
 INSERT INTO `jurnal_srb` (`id`, `tanggal`, `jenis`, `kd`, `kk`, `ket`, `ket2`, `subyek`, `id_subyek`, `jumlah_subyek`, `volume`, `satuan`, `jumlah_a`, `jumlah`, `nobukti`, `id_ref`, `noref`, `tipe_jurnal`, `trx_id`, `date_create`, `user_create`, `date_update`, `user_update`) VALUES
-	(4, '2021-09-28', 'Kredit', '4103', '110102002', 'Pendapatan Lain selain penjualan', 'Keterangan Pendapatan Lain. Proyek ok.', '', 0, 1, 1, 'Rupiah', 120000000, 120000000, 'JU-00002', NULL, '', 'JUM', 3, '2021-09-28 01:23:50', 0, '2021-09-28 01:23:50', 0);
+	(5, '2021-09-28', 'Debet', '110102002', '4103', 'Keterangan Pendapatan Lain. Proyek ok.', 'Pendapatan Lain selain penjualan', '', 0, 1, 1, 'Rupiah', 120000000, 120000000, 'JU-00002', NULL, '', 'JUM', 3, '2021-10-02 05:11:04', 0, '2021-10-02 05:11:04', 0),
+	(6, '2021-10-02', 'Kredit', '510101', '110102002', 'Gaji Pegawai', 'Gaji Pegawai', '', 0, 1, 1, 'Rupiah', 5000000, 5000000, 'JU-00003', NULL, '', 'JUM', 6, '2021-10-02 05:21:51', 0, '2021-10-02 05:21:51', 0);
 /*!40000 ALTER TABLE `jurnal_srb` ENABLE KEYS */;
 
 -- Dumping structure for table webdesktop_altersms.jurnal_template_detail
@@ -529,49 +530,168 @@ INSERT INTO `jurnal_template_head` (`id`, `kode`, `keterangan`, `prefix`, `grup`
 
 -- Dumping structure for procedure webdesktop_altersms.lap_akunting_bukubesar
 DELIMITER //
-CREATE PROCEDURE `lap_akunting_bukubesar`(IN `P_FROM` VARCHAR(50), IN `P_TO` VARCHAR(50), IN `P_KODE_AKUN` VARCHAR(50))
-BEGIN
-UPDATE jurnal_detail AS A LEFT JOIN jual_faktur_head AS B ON A.nobukti=B.notrx SET A.keterangan=B.keterangan WHERE A.coa=41;
-
-SET @no:=0, @saldo:=0, @kode_akun:='';
-SELECT *, DATE_FORMAT(P_FROM, '%d-%m-%Y') AS DARI,
-	DATE_FORMAT(P_TO, '%d-%m-%Y') AS SAMPAI, DATE_FORMAT(tanggal, '%d-%m-%Y') AS TGL,  @no:=IF(urut=0, 1, @no+1) AS NO, @saldo:=IF(urut=0, saldo, 
-
-	IF(tipe='A', @saldo+debet-kredit, 
-	IF(tipe='P', @saldo-debet+kredit, 
-	IF(tipe='R' AND saldonormal='D', @saldo+debet+kredit, 
-	IF(tipe='R' AND saldonormal='K', @saldo-debet+kredit, 0))))
-	
-
-) AS saldo_akhir FROM (
-(
-
-SELECT coa, 'Saldo Awal' AS keterangan, 0 AS debet, 0 AS kredit, '' AS nobukti, DATE(P_FROM) AS tanggal, 0 AS urut, 
-	IF(tipe='A', saldoawal+sa_debet-sa_kredit, 
-	IF(tipe='P', saldoawal-sa_debet+sa_kredit, 
-	IF(tipe='R' AND saldonormal='D', saldoawal+sa_debet+sa_kredit, 
-	IF(tipe='R' AND saldonormal='K', saldoawal-sa_debet+sa_kredit, 0)))) AS saldo, nama_akun, tipe, saldonormal FROM
-(
-SELECT AAA.kode_akun AS coa, AAA.nama_akun, AAA.tipe, AAA.saldoawal, AAA.saldonormal, COALESCE(AAA.saldonormal, 0), COALESCE(BBB.sa_debet, 0) AS sa_debet, COALESCE(BBB.sa_kredit, 0) AS sa_kredit FROM rekening AS AAA
-LEFT JOIN
-
-(SELECT DISTINCT(coa), SUM(debet) AS sa_debet, SUM(kredit) AS sa_kredit FROM (
-	(SELECT IF(jenis='Debet', kd, kk) AS coa, IF(jenis='Debet', ket, ket2) AS keterangan, IF(jenis='Debet', jumlah, 0) AS debet, IF(jenis='Kredit', jumlah, 0) AS kredit, nobukti, tanggal FROM jurnal_srb WHERE tanggal<P_FROM AND IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kd, kk)=P_KODE_AKUN, 1) ORDER BY nobukti) 
-		UNION ALL 
-	(SELECT IF(jenis='Debet', kk, kd) AS coa, IF(jenis='Debet', ket2, ket) AS keterangan, IF(jenis='Debet', 0, jumlah) AS debet, IF(jenis='Kredit', 0, jumlah) AS kredit, nobukti, tanggal FROM jurnal_srb WHERE tanggal<P_FROM AND IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kk, kd)=P_KODE_AKUN, 1) ORDER BY nobukti) 
-		UNION ALL
-	(SELECT A.coa, A.keterangan, A.debet, A.kredit, A.nobukti, B.tanggal FROM jurnal_detail AS A, jurnal AS B WHERE A.nobukti=B.nobukti AND B.tanggal<P_FROM AND IF(LENGTH(P_KODE_AKUN)>0, A.coa=P_KODE_AKUN, 1))
-) AS KUMPULAN_JURNAL GROUP BY coa) AS BBB ON BBB.coa=AAA.kode_akun WHERE AAA.level=4 AND IF(LENGTH(P_KODE_AKUN)>0, AAA.kode_akun=P_KODE_AKUN, 1)) AS TTTT
+CREATE PROCEDURE `lap_akunting_bukubesar`(
+	IN `P_FROM` VARCHAR(50),
+	IN `P_TO` VARCHAR(50),
+	IN `P_KODE_AKUN` VARCHAR(50)
 )
-UNION ALL (
-SELECT T.*, IF(T.debet-T.kredit>0,1,2) AS urut, 0 AS saldo, TT.nama_akun, TT.tipe, TT.saldonormal FROM ( 
-	(SELECT IF(jenis='Debet', kd, kk) AS coa, IF(jenis='Debet', ket, ket2) AS keterangan, IF(jenis='Debet', jumlah, 0) AS debet, IF(jenis='Kredit', jumlah, 0) AS kredit, nobukti, tanggal FROM jurnal_srb WHERE tanggal BETWEEN P_FROM AND P_TO AND IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kd, kk)=P_KODE_AKUN, 1) ORDER BY nobukti) 
-		UNION ALL 
-	(SELECT IF(jenis='Debet', kk, kd) AS coa, IF(jenis='Debet', ket2, ket) AS keterangan, IF(jenis='Debet', 0, jumlah) AS debet, IF(jenis='Kredit', 0, jumlah) AS kredit, nobukti, tanggal FROM jurnal_srb WHERE tanggal BETWEEN P_FROM AND P_TO AND IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kk, kd)=P_KODE_AKUN, 1) ORDER BY nobukti) 
-		UNION ALL
-	(SELECT A.coa, A.keterangan, A.debet, A.kredit, A.nobukti, B.tanggal FROM jurnal_detail AS A, jurnal AS B WHERE A.nobukti=B.nobukti AND B.tanggal BETWEEN P_FROM AND P_TO AND IF(LENGTH(P_KODE_AKUN)>0, A.coa=P_KODE_AKUN, 1))
-) AS T LEFT JOIN rekening AS TT ON T.coa=TT.kode_akun)
-) AS BARU ORDER BY coa, tanggal, nobukti, urut;
+BEGIN
+
+SET 
+	@no:=0, 
+	@saldo:=0, 
+	@kode_akun:='';
+
+
+SELECT 
+	*, 
+	CONCAT(kode_akun, ' - ', nama_akun) kode_nama_akun,
+	DATE_FORMAT(P_FROM, '%d-%m-%Y') AS DARI,
+	DATE_FORMAT(P_TO, '%d-%m-%Y') AS SAMPAI, 
+	DATE_FORMAT(tanggal, '%d-%m-%Y') AS TGL,  
+	@no:=IF(urut=0, 1, @no+1) AS NO, 
+	@saldo:=
+		IF(urut=0, saldo, 
+		IF(tipe='A', @saldo+debet-kredit, 
+		IF(tipe='P', @saldo-debet+kredit, 
+		IF(tipe='R' AND saldonormal='D', @saldo+debet+kredit, 
+		IF(tipe='R' AND saldonormal='K', @saldo-debet+kredit, 0))))) AS saldo_akhir
+FROM (
+	(SELECT 
+		kode_akun, 
+		'Saldo Awal' AS keterangan, 
+		0 AS debet, 
+		0 AS kredit, 
+		'' AS nobukti, 
+		DATE(P_FROM) AS tanggal, 
+		0 AS urut, 
+		IF(tipe='A', saldoawal+sa_debet-sa_kredit, 
+		IF(tipe='P', saldoawal-sa_debet+sa_kredit, 
+		IF(tipe='R' AND saldonormal='D', saldoawal+sa_debet+sa_kredit, 
+		IF(tipe='R' AND saldonormal='K', saldoawal-sa_debet+sa_kredit, 0)))) AS saldo, 
+		nama_akun, 
+		tipe, 
+		saldonormal 
+	FROM 
+		(SELECT 
+			AAA.kode_akun, 
+			AAA.nama_akun, 
+			AAA.tipe, 
+			AAA.saldoawal, 
+			AAA.saldonormal, 
+			/*COALESCE(AAA.saldonormal, 0),*/ 
+			COALESCE(BBB.sa_debet, 0) AS sa_debet, 
+			COALESCE(BBB.sa_kredit, 0) AS sa_kredit 
+		FROM 
+			rekening AS AAA LEFT JOIN
+			(SELECT 
+				DISTINCT(kode_akun), 
+				SUM(debet) AS sa_debet, 
+				SUM(kredit) AS sa_kredit 
+			FROM (
+				(SELECT 
+					IF(jenis='Debet', kd, kk) AS kode_akun, 
+					IF(jenis='Debet', ket, ket2) AS keterangan, 
+					IF(jenis='Debet', jumlah, 0) AS debet, 
+					IF(jenis='Kredit', jumlah, 0) AS kredit, 
+					nobukti, 
+					tanggal 
+				FROM 
+					jurnal_srb 
+				WHERE 
+					tanggal<P_FROM AND 
+					IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kd, kk)=P_KODE_AKUN, 1) 
+				ORDER BY 
+					nobukti) UNION ALL 
+				(SELECT 
+					IF(jenis='Debet', kk, kd) AS kode_akun, 
+					IF(jenis='Debet', ket2, ket) AS keterangan, 
+					IF(jenis='Debet', 0, jumlah) AS debet, 
+					IF(jenis='Kredit', 0, jumlah) AS kredit, 
+					nobukti, 
+					tanggal 
+				FROM 
+					jurnal_srb 
+				WHERE 
+					tanggal<P_FROM AND 
+					IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kk, kd)=P_KODE_AKUN, 1) 
+				ORDER BY 
+					nobukti) UNION ALL
+				(SELECT 
+					A.kode_akun, 
+					A.keterangan, 
+					A.debet, 
+					A.kredit, 
+					B.nobukti, 
+					B.tanggal 
+				FROM 
+					jurnal_detail AS A, 
+					jurnal AS B 
+				WHERE 
+					A.id_jurnal=B.id AND 
+					B.tanggal<P_FROM AND IF(LENGTH(P_KODE_AKUN)>0, A.kode_akun=P_KODE_AKUN, 1)) 
+				) AS KUMPULAN_JURNAL 
+			GROUP BY 
+				kode_akun) AS BBB ON BBB.kode_akun=AAA.kode_akun 
+			WHERE 
+				AAA.level=4 AND IF(LENGTH(P_KODE_AKUN)>0, AAA.kode_akun=P_KODE_AKUN, 1)
+		) AS TTTT
+	) UNION ALL 
+	
+	(SELECT 
+		T.*, 
+		IF(T.debet-T.kredit>0,1,2) AS urut, 
+		0 AS saldo, 
+		TT.nama_akun, 
+		TT.tipe, 
+		TT.saldonormal 
+	FROM ( 
+		(SELECT 
+			IF(jenis='Debet', kd, kk) AS kode_akun, 
+			IF(jenis='Debet', ket, ket2) AS keterangan, 
+			IF(jenis='Debet', jumlah, 0) AS debet, 
+			IF(jenis='Kredit', jumlah, 0) AS kredit, 
+			nobukti, 
+			tanggal 
+		FROM 
+			jurnal_srb 
+		WHERE 
+			tanggal BETWEEN P_FROM AND P_TO AND 
+			IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kd, kk)=P_KODE_AKUN, 1) 
+		ORDER BY 
+			nobukti) UNION ALL 
+		(SELECT 
+			IF(jenis='Debet', kk, kd) AS kode_akun, 
+			IF(jenis='Debet', ket2, ket) AS keterangan, 
+			IF(jenis='Debet', 0, jumlah) AS debet, 
+			IF(jenis='Kredit', 0, jumlah) AS kredit, 
+			nobukti, 
+			tanggal 
+		FROM 
+			jurnal_srb 
+		WHERE 
+			tanggal BETWEEN P_FROM AND P_TO AND 
+			IF(LENGTH(P_KODE_AKUN)>0, IF(jenis='Debet', kk, kd)=P_KODE_AKUN, 1) 
+		ORDER BY 
+			nobukti) UNION ALL
+		(SELECT 
+			A.kode_akun, 
+			A.keterangan, 
+			A.debet, 
+			A.kredit, 
+			B.nobukti, 
+			B.tanggal 
+		FROM 
+			jurnal_detail AS A, 
+			jurnal AS B 
+		WHERE 
+			A.id_jurnal=B.id AND 
+			B.tanggal BETWEEN P_FROM AND P_TO AND 
+			IF(LENGTH(P_KODE_AKUN)>0, A.kode_akun=P_KODE_AKUN, 1))
+		) AS T LEFT JOIN 
+		rekening AS TT ON T.kode_akun=TT.kode_akun)
+	) AS BARU 
+	ORDER BY kode_akun, tanggal, nobukti, urut;
 END//
 DELIMITER ;
 
@@ -884,9 +1004,13 @@ DELIMITER ;
 
 -- Dumping structure for procedure webdesktop_altersms.lap_akunting_neraca_saldo
 DELIMITER //
-CREATE PROCEDURE `lap_akunting_neraca_saldo`(IN `P_FROM` VARCHAR(50), IN `P_TO` VARCHAR(50))
+CREATE PROCEDURE `lap_akunting_neraca_saldo`(
+	IN `P_FROM` VARCHAR(50),
+	IN `P_TO` VARCHAR(50)
+)
 BEGIN
 SET @NO:=0;
+
 SELECT *,
 	@NO:=@NO+1 AS NO, 
 	DATE_FORMAT(P_FROM, '%d-%m-%Y') AS DARI,
@@ -917,7 +1041,7 @@ SELECT
 
 FROM rekening AS BB LEFT JOIN (
 SELECT 
-	DISTINCT(coa) AS kode_akun, 
+	DISTINCT(kode_akun) AS kode_akun, 
 	SUM(IF(tanggal < P_FROM, debet, 0)) AS SA_DEBET, 
 	SUM(IF(tanggal < P_FROM, kredit, 0)) AS SA_KREDIT,  
 	SUM(IF(tanggal BETWEEN P_FROM AND P_TO, debet, 0)) AS SUM_DEBET, 
@@ -926,15 +1050,15 @@ FROM (
 
 SELECT *, IF(debet-kredit>0, 1, 2) AS urut FROM ( 
 	
-	(SELECT IF(jenis='Debet', kd, kk) AS coa, IF(jenis='Debet', ket, ket2) AS keterangan, IF(jenis='Debet', jumlah, 0) AS debet, IF(jenis='Kredit', jumlah, 0) AS kredit, nobukti, tanggal FROM jurnal_srb ORDER BY nobukti) 
+	(SELECT IF(jenis='Debet', kd, kk) AS kode_akun, IF(jenis='Debet', ket, ket2) AS keterangan, IF(jenis='Debet', jumlah, 0) AS debet, IF(jenis='Kredit', jumlah, 0) AS kredit, nobukti, tanggal FROM jurnal_srb ORDER BY nobukti) 
 		UNION ALL
-	(SELECT IF(jenis='Debet', kk, kd) AS coa, IF(jenis='Debet', ket2, ket) AS keterangan, IF(jenis='Debet', 0, jumlah) AS debet, IF(jenis='Kredit', 0, jumlah) AS kredit, nobukti, tanggal FROM jurnal_srb ORDER BY nobukti) 
+	(SELECT IF(jenis='Debet', kk, kd) AS kode_akun, IF(jenis='Debet', ket2, ket) AS keterangan, IF(jenis='Debet', 0, jumlah) AS debet, IF(jenis='Kredit', 0, jumlah) AS kredit, nobukti, tanggal FROM jurnal_srb ORDER BY nobukti) 
 		UNION ALL
-	(SELECT A.coa, A.keterangan, A.debet, A.kredit, A.nobukti, B.tanggal FROM jurnal_detail AS A, jurnal AS B WHERE A.nobukti=B.nobukti)
+	(SELECT A.kode_akun, A.keterangan, A.debet, A.kredit, B.nobukti, B.tanggal FROM jurnal_detail AS A, jurnal AS B WHERE A.id_jurnal=B.id)
 	
 ) AS T ORDER BY nobukti, urut 
 
-) AS TT GROUP BY coa
+) AS TT GROUP BY kode_akun
 
 ) AS AA ON BB.kode_akun=AA.kode_akun)
 
@@ -1062,8 +1186,8 @@ INSERT INTO `modul` (`id`, `id_parent`, `text`, `iconCls`, `rowCls`, `viewType`,
 	(5, 24, 'Kas & Bank Keluar', 'task-folder', '', '', '', 'Admin.view.webdesktop.kasbankkeluar.list', 2, 'YYYN', 1),
 	(6, 24, 'Kas & Bank Masuk', 'task-folder', '', '', '', 'Admin.view.webdesktop.kasbankmasuk.list', 1, 'YYYN', 1),
 	(7, 23, 'Jurnal', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.jurnal.list', 1, 'NNNY', 1),
-	(8, 23, 'Buku Besar', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.akuntansi.bukubesar', 2, 'NNNY', 1),
-	(9, 23, 'Neraca Saldo', 'task-folder', '', '', '', 'Admin.view.webdesktop.akuntansi.neracasaldo', 3, 'NNNY', 1),
+	(8, 23, 'Buku Besar', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.bukubesar.list', 2, 'NNNY', 1),
+	(9, 23, 'Neraca Saldo', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.neracasaldo.list', 3, 'NNNY', 1),
 	(10, 23, 'Laba Rugi', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.akuntansi.labarugi', 4, 'NNNY', 1),
 	(11, 23, 'Neraca', 'task-folder', '', '', '', 'Admin.view.webdesktop.laporan.akuntansi.neraca', 5, 'NNNY', 1),
 	(13, 25, 'Jurnal Memorial', 'task-folder', '', '', '', 'Admin.view.webdesktop.jurnalmemorial.list', 3, 'YYYN', 1),
@@ -1254,7 +1378,7 @@ CREATE TABLE IF NOT EXISTS `pengajuan_anggaran` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6853 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
--- Dumping data for table webdesktop_altersms.pengajuan_anggaran: ~6,625 rows (approximately)
+-- Dumping data for table webdesktop_altersms.pengajuan_anggaran: ~6,897 rows (approximately)
 DELETE FROM `pengajuan_anggaran`;
 /*!40000 ALTER TABLE `pengajuan_anggaran` DISABLE KEYS */;
 INSERT INTO `pengajuan_anggaran` (`id`, `notrx`, `tanggal`, `id_divisi`, `id_proyek`, `id_akunbudget`, `jumlah`, `kepada`, `keterangan`, `is_bayar`, `user_create`, `date_create`, `user_update`, `date_update`) VALUES
@@ -16816,7 +16940,7 @@ CREATE TABLE IF NOT EXISTS `penganggaran_dana_detail` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=262 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
--- Dumping data for table webdesktop_altersms.penganggaran_dana_detail: ~255 rows (approximately)
+-- Dumping data for table webdesktop_altersms.penganggaran_dana_detail: ~286 rows (approximately)
 DELETE FROM `penganggaran_dana_detail`;
 /*!40000 ALTER TABLE `penganggaran_dana_detail` DISABLE KEYS */;
 INSERT INTO `penganggaran_dana_detail` (`id`, `divisi`, `project`, `jenisanggaran`, `kode_akun`, `nama_akun`, `nov`, `des`, `jan`, `feb`, `mar`, `apr`, `mei`, `jun`, `jul`, `agu`, `sep`, `okt`) VALUES
@@ -17139,9 +17263,9 @@ INSERT INTO `rekening` (`id`, `id_parent`, `kode_akun`, `nama_akun`, `level`, `n
 	(106, 255, '120201', 'Akumulasi Penyusutan - Peralatan Server', 4, 4, 'K', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:49:05', NULL),
 	(107, 255, '120202', 'Akumulasi Penyusutan - Kendaraan', 4, 5, 'K', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:49:48', NULL),
 	(108, 255, '120203', 'Akumulasi Penyusutan - Peralatan Kantor', 4, 6, 'K', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:49:32', NULL),
-	(109, 1, '13', 'Aktiva Lainnya', 2, 3, '', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(110, 109, '1301', 'Pra Operasional ', 4, 1, 'D', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-	(111, 109, '1302', 'Sistem Accounting', 4, 2, 'D', 'A', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
+	(109, 1, '13', 'AKTIVA LAINNYA', 2, 3, '', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-10-03 03:51:39', NULL),
+	(110, 281, '1301', 'Pra Operasional ', 4, 1, 'D', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-10-03 03:52:33', NULL),
+	(111, 281, '1302', 'Sistem Accounting', 4, 2, 'D', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-10-03 03:52:54', NULL),
 	(112, 0, 'P', 'PASSIVA', 1, 0, '', 'P', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(113, 112, '2', 'KEWAJIBAN', 2, 1, '', 'P', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
 	(114, 113, '21', 'KEWAJIBAN LANCAR', 3, 1, '', 'P', 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
@@ -17194,7 +17318,8 @@ INSERT INTO `rekening` (`id`, `id_parent`, `kode_akun`, `nama_akun`, `level`, `n
 	(267, 95, '110301', 'Asuransi Dibayar Dimuka', 3, 4, '', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:35:34', NULL),
 	(272, 253, '120104', 'Tanah dan Bangunan', 4, 2, 'D', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:47:40', NULL),
 	(273, 255, '120204', 'Akumulasi Penyusutan - Tanah dan Bangunan', 4, 5, 'K', 'A', 0, 0, 0, 0, '', NULL, NULL, '2021-09-25 08:50:15', NULL),
-	(280, 148, '4102', 'Penjualan Voucher', 4, 3, 'K', 'R', 0, 0, 0, 0, '', '2021-09-25 09:00:15', NULL, '2021-09-25 09:00:41', NULL);
+	(280, 148, '4102', 'Penjualan Voucher', 4, 3, 'K', 'R', 0, 0, 0, 0, '', '2021-09-25 09:00:15', NULL, '2021-09-25 09:00:41', NULL),
+	(281, 109, '130', 'Aktiva Lainnya', 3, 3, '', 'A', 0, 0, 0, 0, '', '2021-10-03 03:52:07', NULL, '2021-10-03 03:52:07', NULL);
 /*!40000 ALTER TABLE `rekening` ENABLE KEYS */;
 
 -- Dumping structure for table webdesktop_altersms.satuan

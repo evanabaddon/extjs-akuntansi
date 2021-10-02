@@ -170,8 +170,7 @@ Ext.define('Admin.view.jurnalmemorial.EditDetail', {
             plugins: me.rowEditor,
             features: [{
                 ftype: 'summary',
-                hideGroupedHeader: true,
-                enableGroupingMenu: false
+                dock: 'bottom'
             }],
             store: Ext.create('Ext.data.Store', {
                 
